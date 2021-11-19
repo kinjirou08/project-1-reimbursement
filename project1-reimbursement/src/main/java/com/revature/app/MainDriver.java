@@ -1,6 +1,6 @@
 package com.revature.app;
 
-import com.revature.controller.UserController;
+import com.revature.controller.ValidationController;
 
 import io.javalin.Javalin;
 
@@ -10,9 +10,9 @@ public class MainDriver {
 	
 		Javalin app = Javalin.create();
 		
-		UserController userController = new UserController();
+		ValidationController validateController = new ValidationController();
 		
-		userController.registerEndpoints(app);
+		validateController.registerEndpoints(app);
 		
 		app.start(8080);
 		
