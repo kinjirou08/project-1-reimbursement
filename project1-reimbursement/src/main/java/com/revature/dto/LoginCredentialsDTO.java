@@ -4,37 +4,37 @@ import java.util.Objects;
 
 public class LoginCredentialsDTO {
 	
-	private String ers_username;
-	private String ers_password;
+	private String ersUsername;
+	private String ersPassword;
 	
 	public LoginCredentialsDTO () {		
 	}
 
-	public LoginCredentialsDTO(String ers_username, String ers_password) {
+	public LoginCredentialsDTO(String ersUsername, String ersPassword) {
 		super();
-		this.ers_username = ers_username;
-		this.ers_password = ers_password;
+		this.ersUsername = ersUsername;
+		this.ersPassword = ersPassword;
 	}
 
-	public String getErs_username() {
-		return ers_username;
+	public String getErsUsername() {
+		return ersUsername;
 	}
 
-	public void setErs_username(String ers_username) {
-		this.ers_username = ers_username;
+	public void setErsUsername(String ersUsername) {
+		this.ersUsername = ersUsername;
 	}
 
-	public String getErs_password() {
-		return ers_password;
+	public String getErsPassword() {
+		return ersPassword;
 	}
 
-	public void setErs_password(String ers_password) {
-		this.ers_password = ers_password;
+	public void setErsPassword(String ersPassword) {
+		this.ersPassword = ersPassword;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(ers_password, ers_username);
+		return Objects.hash(ersPassword, ersUsername);
 	}
 
 	@Override
@@ -46,12 +46,12 @@ public class LoginCredentialsDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		LoginCredentialsDTO other = (LoginCredentialsDTO) obj;
-		return Objects.equals(ers_password, other.ers_password) && Objects.equals(ers_username, other.ers_username);
+		return Objects.equals(ersPassword, other.ersPassword) && Objects.equals(ersUsername, other.ersUsername);
 	}
 
 	@Override
 	public String toString() {
-		return "LoginCredentialsDTO [ers_username=" + ers_username + ", ers_password=" + ers_password + "]";
+		return "LoginCredentialsDTO [ers_username=" + ersUsername + ", ers_password=" + ersPassword + "]";
 	}	
 	
 }

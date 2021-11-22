@@ -22,7 +22,7 @@ public class ValidationController {
 	
 		LoginCredentialsDTO login = ctx.bodyAsClass(LoginCredentialsDTO.class);
 		
-		Users user = this.userService.getUserByUsernameAndPassword(login.getErs_username(), login.getErs_password());
+		Users user = this.userService.getUserByUsernameAndPassword(login.getErsUsername(), login.getErsPassword());
 		
 		HttpServletRequest req = ctx.req;
 		
