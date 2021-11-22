@@ -10,7 +10,7 @@ import com.revature.services.UsersService;
 import io.javalin.Javalin;
 import io.javalin.http.Handler;
 
-public class ValidationController {
+public class ValidationController implements MapEndpoints{
 	
 	UsersService userService;
 	
@@ -48,9 +48,11 @@ public class ValidationController {
 		//ctx.redirect("/empHomePage");
 		
 	};
-	
-	public void registerEndpoints(Javalin app) {
+
+	@Override
+	public void mapEndpoints(Javalin app) {
 		app.post("/login", login);
+		
 	}
 
 }
