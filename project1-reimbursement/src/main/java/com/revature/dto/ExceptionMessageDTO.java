@@ -9,10 +9,10 @@ private String message;
 	public ExceptionMessageDTO() {
 	}
 	
-	public ExceptionMessageDTO(Exception e) {
-		this.message = e.getMessage();
+	public ExceptionMessageDTO(String message) {
+		this.message = message;
 	}
-
+	
 	public String getMessage() {
 		return message;
 	}

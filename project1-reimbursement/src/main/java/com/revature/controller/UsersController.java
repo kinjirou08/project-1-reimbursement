@@ -5,6 +5,8 @@ import java.util.List;
 import com.revature.dto.AddReimbursementDTO;
 import com.revature.dto.UpdateReimbursementDTO;
 import com.revature.models.Reimbursement;
+import com.revature.models.Users;
+import com.revature.services.AuthorizationService;
 import com.revature.services.UsersService;
 
 import io.javalin.Javalin;
@@ -13,26 +15,22 @@ import io.javalin.http.Handler;
 public class UsersController implements MapEndpoints {
 
 	UsersService userService;
+	AuthorizationService authService;
 
 	public UsersController() {
 		this.userService = new UsersService();
+		this.authService = new AuthorizationService();
 	}
 
 	public Handler addReimbursement = (ctx) ->  {
+		
+		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
+		this.authService.authorizeEmployee(user);
 
-		String id = ctx.pathParam("user_id");
-
+		//String id = ctx.pathParam("user_id");
 		AddReimbursementDTO addDto = ctx.bodyAsClass(AddReimbursementDTO.class);
-		
-		Double classDouble = addDto.getReimbAmount();
-		
-		if (classDouble.toString().matches("^[a-zA-Z0-9]*$")) {
-			ctx.result("Boo boo");
-		}
 
-		System.out.println(addDto.getReimbAmount());
-
-		Reimbursement newReimbursement = this.userService.newReimbursement(id, addDto);
+		Reimbursement newReimbursement = this.userService.newReimbursement(user.getErsUserId(), addDto);
 
 		ctx.json(newReimbursement);
 
@@ -40,12 +38,18 @@ public class UsersController implements MapEndpoints {
 
 	public Handler getAllReimbursement = (ctx) -> {
 		
+		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
+		this.authService.authorizeFinanceManager(user);
+		
 		List<Reimbursement> listOfReimbursements = this.userService.getAllReimbursement();
 
 		ctx.json(listOfReimbursements);
 	};
 	
 	public Handler getAllReimbursementById = (ctx) -> {
+		
+		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
+		this.authService.authorizeEmployee(user);
 		
 		String userId = ctx.pathParam("user_id");
 
@@ -55,6 +59,9 @@ public class UsersController implements MapEndpoints {
 	};
 
 	public Handler editReimbursement = (ctx) -> {
+		
+		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
+		this.authService.authorizeFinanceManager(user);
 
 		String userId = ctx.pathParam("user_id");
 		String reimbId = ctx.pathParam("reimb_id");
@@ -69,7 +76,7 @@ public class UsersController implements MapEndpoints {
 	
 	@Override
 	public void mapEndpoints(Javalin app) {
-		app.post("/newReimbursement/{user_id}", addReimbursement);
+		app.post("/newReimbursement", addReimbursement);
 		app.get("/reimbursements", getAllReimbursement);
 		app.get("/reimbursements/{user_id}", getAllReimbursementById);
 		app.put("/reimbursements/{user_id}/update/{reimb_id}", editReimbursement);

@@ -3,6 +3,7 @@ package com.revature.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.revature.dto.ExceptionMessageDTO;
 import com.revature.dto.LoginCredentialsDTO;
 import com.revature.models.Users;
 import com.revature.services.UsersService;
@@ -25,13 +26,13 @@ public class ValidationController implements MapEndpoints{
 		Users user = this.userService.getUserByUsernameAndPassword(login.getErsUsername(), login.getErsPassword());
 		
 		HttpServletRequest req = ctx.req;
-		
 		HttpSession session = req.getSession();
-		session.setAttribute("validateduser",user);
 		
+		session.setAttribute("validateduser", user);
+			
 		ctx.result("Redirecting...");
 		
-		
+	};	
 //		if (username.equals("username") && password.equals("password")) {			
 //			if (req.getSession(false) != null) { //not necessarily needed
 //				ctx.result("You're already logged in!");// not necessarily needed
@@ -47,11 +48,29 @@ public class ValidationController implements MapEndpoints{
 		//req.getSession().invalidate(); ---> to invalidate that session
 		//ctx.redirect("/empHomePage");
 		
+	private Handler logout = (ctx) -> {
+		HttpServletRequest req = ctx.req;
+		
+		req.getSession().invalidate();
 	};
+	
+	private Handler checkLoginStatus = (ctx) -> {
+		HttpSession session = ctx.req.getSession();
+		
+		if (!(session.getAttribute("validateuser") == null)) {
+			ctx.json(session.getAttribute("currentuser"));
+			ctx.status(200);
+		} else {
+			ctx.json(new ExceptionMessageDTO("You're not logged in"));
+			ctx.status(401);
+		}
+	};
+
 
 	@Override
 	public void mapEndpoints(Javalin app) {
 		app.post("/login", login);
+		app.post("/logout", logout);
 		
 	}
 

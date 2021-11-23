@@ -34,13 +34,12 @@ public class UsersService {
 		return user;
 	}
 
-	public Reimbursement newReimbursement(String id, AddReimbursementDTO addDto) throws SQLException {
+	public Reimbursement newReimbursement(int ersUserId, AddReimbursementDTO addDto) throws SQLException {
 						
 		if (addDto.getReimbAmount() == 0) {
 			throw new InvalidParameterException("Reimbursement Amount cannot be empty and/or Zero!");
 		}
-
-		
+	
 		Set<String> validReimbType = new HashSet<>();
 		validReimbType.add("Food");
 		validReimbType.add("Lodging");
@@ -55,10 +54,7 @@ public class UsersService {
 			throw new InvalidParameterException("Please put some description on why you want a Reimbursement...");
 		}
 		
-
-		int usersId = Integer.parseInt(id);
-		
-		Reimbursement insertNewReimbursement = this.userDao.insertNewReimbursement(usersId, addDto);
+		Reimbursement insertNewReimbursement = this.userDao.insertNewReimbursement(ersUserId, addDto);
 		
 		return insertNewReimbursement;
 	}
