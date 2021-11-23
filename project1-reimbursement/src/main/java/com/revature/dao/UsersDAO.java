@@ -74,9 +74,33 @@ public class UsersDAO {
 
 		try (Connection con = JDBCUtility.getConnection()) {
 
-			String sql = "SELECT * FROM ers_reimbursement;";
+			String sql = "SELECT * FROM ers_reimbursement ORDER BY reimb_id;";
+			PreparedStatement ps = con.prepareStatement(sql);
+			
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				listOfReimbursements.add(new Reimbursement(rs.getInt("reimb_id"), rs.getDouble("reimb_amount"),
+						rs.getString("reimb_submitted"), rs.getString("reimb_resolved"), rs.getString("reimb_status"),
+						rs.getString("reimb_type"), rs.getString("reimb_description"), rs.getBytes("reimb_receipt"),
+						rs.getInt("fk_reimb_author"), rs.getInt("fk_reimb_resolver")));
+			}
+		}
+		return listOfReimbursements;
+	}
+	
+	
+	public List<Reimbursement> selectAllReimbursementsById(int id) throws SQLException {
+
+		List<Reimbursement> listOfReimbursements = new ArrayList<>();
+
+		try (Connection con = JDBCUtility.getConnection()) {
+
+			String sql = "SELECT * FROM ers_reimbursement WHERE fk_reimb_author = ? ORDER BY reimb_id;";
 			PreparedStatement ps = con.prepareStatement(sql);
 
+			ps.setInt(1, id);
+			
 			ResultSet rs = ps.executeQuery();
 
 			while (rs.next()) {
@@ -92,7 +116,7 @@ public class UsersDAO {
 	public Reimbursement selectReimbursementById(int rId) throws SQLException {
 
 		try (Connection con = JDBCUtility.getConnection()) {
-			String sql = "SELECT *\r\n" + "FROM ers_reimbursement\r\n" + "WHERE reimb_id = ?;";
+			String sql = "SELECT * FROM ers_reimbursement WHERE reimb_id = ? ORDER BY reimb_id;";
 			PreparedStatement ps = con.prepareStatement(sql);
 
 			ps.setInt(1, rId);

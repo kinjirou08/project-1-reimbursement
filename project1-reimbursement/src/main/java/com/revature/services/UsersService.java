@@ -67,12 +67,21 @@ public class UsersService {
 		
 		return this.userDao.selectAllReimbursements();
 	}
+	
+	public List<Reimbursement> getAllReimbursementById(String userId) throws SQLException {
+		
+		int id = Integer.parseInt(userId);
+		
+		List<Reimbursement> listOfReimbursementById = this.userDao.selectAllReimbursementsById(id);
+		
+		return listOfReimbursementById;
+	}
 
 	public Reimbursement editReimbursement(String userId, String reimbId, UpdateReimbursementDTO editDto) throws SQLException, ReimbursementNotFoundExcpetion {
 		
 		int uId = Integer.parseInt(userId);
 		int rId = Integer.parseInt(reimbId);
-		
+				
 		Reimbursement getReimbursementById = this.userDao.selectReimbursementById(rId);
 		
 		if (getReimbursementById == null) {
