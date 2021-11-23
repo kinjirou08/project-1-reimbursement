@@ -7,6 +7,7 @@ import javax.security.auth.login.FailedLoginException;
 
 import com.revature.dao.UsersDAO;
 import com.revature.dto.AddReimbursementDTO;
+import com.revature.dto.UpdateReimbursementDTO;
 import com.revature.models.Reimbursement;
 import com.revature.models.Users;
 
@@ -41,6 +42,18 @@ public class UsersService {
 	public List<Reimbursement> getAllReimbursement() throws SQLException {
 		
 		return this.userDao.selectAllReimbursements();
+	}
+
+	public Reimbursement editReimbursement(String userId, String reimbId, UpdateReimbursementDTO editDto) throws SQLException {
+		
+		int uId = Integer.parseInt(userId);
+		int rId = Integer.parseInt(reimbId);
+		
+		Reimbursement getReimbursementById = this.userDao.selectReimbursementById(rId);
+		
+		Reimbursement reimbToBeUpdated = this.userDao.updateReimbursement(uId, rId, getReimbursementById, editDto);
+		
+		return reimbToBeUpdated;
 	}
 
 	

@@ -3,6 +3,7 @@ package com.revature.controller;
 import java.util.List;
 
 import com.revature.dto.AddReimbursementDTO;
+import com.revature.dto.UpdateReimbursementDTO;
 import com.revature.models.Reimbursement;
 import com.revature.services.UsersService;
 
@@ -36,10 +37,24 @@ public class UsersController implements MapEndpoints {
 		ctx.json(listOfReimbursements);
 	};
 	
+	public Handler editReimbursement = (ctx) -> {
+		
+		String userId = ctx.pathParam("user_id");
+		String reimbId = ctx.pathParam("reimb_id");
+		
+		UpdateReimbursementDTO editDto = ctx.bodyAsClass(UpdateReimbursementDTO.class);
+		
+		Reimbursement reimbToBeUpdated = this.userService.editReimbursement(userId, reimbId, editDto);
+		
+		ctx.json(reimbToBeUpdated);
+		
+	};
+	
 	@Override
 	public void mapEndpoints(Javalin app) {
 		app.post("/newReimbursement/{user_id}", addReimbursement);
 		app.get("/reimbursements", getAllReimbursement);
+		app.put("/reimbursements/{user_id}/update/{reimb_id}", editReimbursement);
 	}
 
 }
