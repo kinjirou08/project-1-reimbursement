@@ -1,5 +1,6 @@
 package com.revature.app;
 
+import com.revature.controller.ExceptionMappingController;
 import com.revature.controller.MapEndpoints;
 import com.revature.controller.UsersController;
 import com.revature.controller.ValidationController;
@@ -13,6 +14,10 @@ public class MainDriver {
 		Javalin app = Javalin.create();
 		
 		mapControllers(app, new ValidationController(), new UsersController());
+		
+		ExceptionMappingController exceptionMapper = new ExceptionMappingController();
+		
+		exceptionMapper.mapExceptions(app);
 			
 		app.start(8080);
 		

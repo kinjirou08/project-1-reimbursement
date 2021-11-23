@@ -125,6 +125,8 @@ public class UsersDAO {
 
 			ps.executeUpdate();
 
+			getReimbursementById = selectReimbursementById(rId);
+			
 			return new Reimbursement(rId, getReimbursementById.getReimbAmount(),
 					getReimbursementById.getReimbSubmitted(), getReimbursementById.getReimbResolved(),
 					editDto.getReimbStatus(), getReimbursementById.getReimbType(),
