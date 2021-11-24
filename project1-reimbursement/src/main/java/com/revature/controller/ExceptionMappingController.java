@@ -22,7 +22,7 @@ public class ExceptionMappingController {
 		});
 		
 		app.exception(UnauthorizedException.class, (e, ctx) -> {
-			ctx.status(400);
+			ctx.status(401);
 			ctx.json(new ExceptionMessageDTO(e.getMessage()));
 		});
 	}

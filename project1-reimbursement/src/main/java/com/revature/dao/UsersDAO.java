@@ -1,5 +1,6 @@
 package com.revature.dao;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -63,7 +64,7 @@ public class UsersDAO {
 
 			return new Reimbursement(autoGenKeys, addDto.getReimbAmount(), rs.getString("reimb_submitted"),
 					rs.getString("reimb_resolved"), rs.getString("reimb_status"), addDto.getReimbType(),
-					addDto.getReimbDescription(), reimb.getReimbReceipt(), usersId, 0);
+					addDto.getReimbDescription(), usersId, 0);
 		}
 
 	}
@@ -76,20 +77,19 @@ public class UsersDAO {
 
 			String sql = "SELECT * FROM ers_reimbursement ORDER BY reimb_id;";
 			PreparedStatement ps = con.prepareStatement(sql);
-			
+
 			ResultSet rs = ps.executeQuery();
 
 			while (rs.next()) {
 				listOfReimbursements.add(new Reimbursement(rs.getInt("reimb_id"), rs.getDouble("reimb_amount"),
 						rs.getString("reimb_submitted"), rs.getString("reimb_resolved"), rs.getString("reimb_status"),
-						rs.getString("reimb_type"), rs.getString("reimb_description"), rs.getBytes("reimb_receipt"),
+						rs.getString("reimb_type"), rs.getString("reimb_description"),
 						rs.getInt("fk_reimb_author"), rs.getInt("fk_reimb_resolver")));
 			}
 		}
 		return listOfReimbursements;
 	}
-	
-	
+
 	public List<Reimbursement> selectAllReimbursementsById(int id) throws SQLException {
 
 		List<Reimbursement> listOfReimbursements = new ArrayList<>();
@@ -100,13 +100,13 @@ public class UsersDAO {
 			PreparedStatement ps = con.prepareStatement(sql);
 
 			ps.setInt(1, id);
-			
+
 			ResultSet rs = ps.executeQuery();
 
 			while (rs.next()) {
 				listOfReimbursements.add(new Reimbursement(rs.getInt("reimb_id"), rs.getDouble("reimb_amount"),
 						rs.getString("reimb_submitted"), rs.getString("reimb_resolved"), rs.getString("reimb_status"),
-						rs.getString("reimb_type"), rs.getString("reimb_description"), rs.getBytes("reimb_receipt"),
+						rs.getString("reimb_type"), rs.getString("reimb_description"),
 						rs.getInt("fk_reimb_author"), rs.getInt("fk_reimb_resolver")));
 			}
 		}
@@ -126,7 +126,7 @@ public class UsersDAO {
 			if (rs.next()) {
 				return new Reimbursement(rId, rs.getDouble("reimb_amount"), rs.getString("reimb_submitted"),
 						rs.getString("reimb_resolved"), rs.getString("reimb_status"), rs.getString("reimb_type"),
-						rs.getString("reimb_description"), rs.getBytes("reimb_receipt"), rs.getInt("fk_reimb_author"),
+						rs.getString("reimb_description"), rs.getInt("fk_reimb_author"),
 						rs.getInt("fk_reimb_resolver"));
 			} else {
 				return null;
@@ -134,31 +134,61 @@ public class UsersDAO {
 		}
 	}
 
-	public Reimbursement updateReimbursement(int uId, int rId, Reimbursement getReimbursementById,
-			UpdateReimbursementDTO editDto) throws SQLException {
+//	public Reimbursement updateReimbursement(int uId, int rId, Reimbursement getReimbursementById,
+//			UpdateReimbursementDTO editDto) throws SQLException {
+//
+//		try (Connection con = JDBCUtility.getConnection()) {
+//
+//			String sql = "UPDATE ers_reimbursement\r\n"
+//					+ "SET reimb_resolved = now(), fk_reimb_resolver = ?, reimb_status = ?\r\n" + "WHERE reimb_id = ?;";
+//			PreparedStatement ps = con.prepareStatement(sql);
+//
+//			ps.setInt(1, uId);
+//			ps.setString(2, editDto.getReimbStatus());
+//			ps.setInt(3, rId);
+//
+//			ps.executeUpdate();
+//
+//			getReimbursementById = selectReimbursementById(rId);
+//
+//			return new Reimbursement(rId, getReimbursementById.getReimbAmount(),
+//					getReimbursementById.getReimbSubmitted(), getReimbursementById.getReimbResolved(),
+//					editDto.getReimbStatus(), getReimbursementById.getReimbType(),
+//					getReimbursementById.getReimbDescription(),getReimbursementById.getReimbAuthor(), uId);
+//		}
+//
+//	}
 
+
+	public Reimbursement updateReimbursement(int reimbAuthor, int rId, Reimbursement getReimbursementById,
+			String reimbStatus, InputStream receipt) throws SQLException {
+		
 		try (Connection con = JDBCUtility.getConnection()) {
+			con.setAutoCommit(false);
 
 			String sql = "UPDATE ers_reimbursement\r\n"
-					+ "SET reimb_resolved = now(), fk_reimb_resolver = ?, reimb_status = ?\r\n" + "WHERE reimb_id = ?;";
+					+ "SET reimb_resolved = now(), fk_reimb_resolver = ?, reimb_status = ?, reimb_receipt = ?\r\n"
+					+ "WHERE reimb_id = ?;";
 			PreparedStatement ps = con.prepareStatement(sql);
 
-			ps.setInt(1, uId);
-			ps.setString(2, editDto.getReimbStatus());
-			ps.setInt(3, rId);
+			ps.setInt(1, reimbAuthor);
+			ps.setString(2, reimbStatus);
+			ps.setBinaryStream(3, receipt);
+			ps.setInt(4, rId);
 
 			ps.executeUpdate();
 
 			getReimbursementById = selectReimbursementById(rId);
 			
+			con.commit();
+
 			return new Reimbursement(rId, getReimbursementById.getReimbAmount(),
 					getReimbursementById.getReimbSubmitted(), getReimbursementById.getReimbResolved(),
-					editDto.getReimbStatus(), getReimbursementById.getReimbType(),
-					getReimbursementById.getReimbDescription(), getReimbursementById.getReimbReceipt(),
-					getReimbursementById.getReimbAuthor(), uId);
-
+					reimbStatus, getReimbursementById.getReimbType(),
+					getReimbursementById.getReimbDescription(),getReimbursementById.getReimbAuthor(), reimbAuthor);
 		}
 
+		
 	}
 
 }

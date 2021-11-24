@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -34,12 +35,11 @@ public class UsersService {
 		return user;
 	}
 
-	public Reimbursement newReimbursement(int ersUserId, AddReimbursementDTO addDto) throws SQLException {
+	public Reimbursement newReimbursement(Users user, AddReimbursementDTO addDto) throws SQLException {
 						
 		if (addDto.getReimbAmount() == 0) {
 			throw new InvalidParameterException("Reimbursement Amount cannot be empty and/or Zero!");
-		}
-	
+		}	
 		Set<String> validReimbType = new HashSet<>();
 		validReimbType.add("Food");
 		validReimbType.add("Lodging");
@@ -48,13 +48,12 @@ public class UsersService {
 		
 		if (!validReimbType.contains(addDto.getReimbType())) {
 			throw new InvalidParameterException("Reimbursement Type can only be: Food, Lodging, Travel, or Other");
-		}
-			
+		}			
 		if (addDto.getReimbDescription().trim().equals("")) {
 			throw new InvalidParameterException("Please put some description on why you want a Reimbursement...");
 		}
-		
-		Reimbursement insertNewReimbursement = this.userDao.insertNewReimbursement(ersUserId, addDto);
+		int reimbAuthor = user.getErsUserId();
+		Reimbursement insertNewReimbursement = this.userDao.insertNewReimbursement(reimbAuthor, addDto);
 		
 		return insertNewReimbursement;
 	}
@@ -73,10 +72,10 @@ public class UsersService {
 		return listOfReimbursementById;
 	}
 
-	public Reimbursement editReimbursement(String userId, String reimbId, UpdateReimbursementDTO editDto) throws SQLException, ReimbursementNotFoundExcpetion {
+	public Reimbursement editReimbursement(Users user, String reimbId, String reimbStatus, InputStream receipt) throws SQLException, ReimbursementNotFoundExcpetion, UnauthorizedException {
 		
-		int uId = Integer.parseInt(userId);
 		int rId = Integer.parseInt(reimbId);
+		int reimbAuthor = user.getErsUserId();
 				
 		Reimbursement getReimbursementById = this.userDao.selectReimbursementById(rId);
 		
@@ -84,10 +83,33 @@ public class UsersService {
 			throw new ReimbursementNotFoundExcpetion("There is no exisiting Reimbursement with that id of " +rId);
 		}
 		
-		Reimbursement reimbToBeUpdated = this.userDao.updateReimbursement(uId, rId, getReimbursementById, editDto);
-		
+		if (getReimbursementById.getReimbAuthor() == reimbAuthor) {
+			throw new UnauthorizedException("Cannot approve/reject your own Reimbursement request!");
+		}
+		//Reimbursement reimbToBeUpdated = this.userDao.updateReimbursement(reimbAuthor, rId, getReimbursementById, editDto);
+		Reimbursement reimbToBeUpdated = this.userDao.updateReimbursement(reimbAuthor, rId, getReimbursementById, reimbStatus, receipt);
 		return reimbToBeUpdated;
+		
 	}
+
+//	public Reimbursement editReimbursement(Users user, String reimbId, UpdateReimbursementDTO editDto) throws SQLException, ReimbursementNotFoundExcpetion, UnauthorizedException {
+//		
+//		int rId = Integer.parseInt(reimbId);
+//		int reimbAuthor = user.getErsUserId();
+//				
+//		Reimbursement getReimbursementById = this.userDao.selectReimbursementById(rId);
+//		
+//		if (getReimbursementById == null) {
+//			throw new ReimbursementNotFoundExcpetion("There is no exisiting Reimbursement with that id of " +rId);
+//		}
+//		
+//		if (getReimbursementById.getReimbAuthor() == reimbAuthor) {
+//			throw new UnauthorizedException("Cannot approve/reject your own Reimbursement request!");
+//		}
+//		Reimbursement reimbToBeUpdated = this.userDao.updateReimbursement(reimbAuthor, rId, getReimbursementById, editDto);
+//		
+//		return reimbToBeUpdated;
+//	}
 
 	
 }

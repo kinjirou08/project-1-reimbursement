@@ -12,7 +12,7 @@ public class Reimbursement {
 	private String reimbStatus; // Default = "Pending" -- other options: "Approved" AND "Rejected"
 	private String reimbType; // Food, Lodging, Travel, Other
 	private String reimbDescription;
-	private byte[] reimbReceipt; 
+	//private byte[] reimbReceipt; 
 	private int reimbAuthor;
 	private int reimbResolver;
 	
@@ -22,7 +22,7 @@ public class Reimbursement {
 	}
 
 	public Reimbursement(int reimbId, double reimbAmount, String reimbSubmitted, String reimbResolved,
-			String reimbStatus, String reimbType, String reimbDescription, byte[] reimbReceipt, int reimbAuthor,
+			String reimbStatus, String reimbType, String reimbDescription, int reimbAuthor,
 			int reimbResolver) {
 		super();
 		this.reimbId = reimbId;
@@ -32,7 +32,7 @@ public class Reimbursement {
 		this.reimbStatus = reimbStatus;
 		this.reimbType = reimbType;
 		this.reimbDescription = reimbDescription;
-		this.reimbReceipt = reimbReceipt;
+		//this.reimbReceipt = reimbReceipt;
 		this.reimbAuthor = reimbAuthor;
 		this.reimbResolver = reimbResolver;
 	}
@@ -93,13 +93,13 @@ public class Reimbursement {
 		this.reimbDescription = reimbDescription;
 	}
 
-	public byte[] getReimbReceipt() {
-		return reimbReceipt;
-	}
-
-	public void setReimbReceipt(byte[] reimbReceipt) {
-		this.reimbReceipt = reimbReceipt;
-	}
+//	public byte[] getReimbReceipt() {
+//		return reimbReceipt;
+//	}
+//
+//	public void setReimbReceipt(byte[] reimbReceipt) {
+//		this.reimbReceipt = reimbReceipt;
+//	}
 
 	public int getReimbAuthor() {
 		return reimbAuthor;
@@ -119,12 +119,8 @@ public class Reimbursement {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Arrays.hashCode(reimbReceipt);
-		result = prime * result + Objects.hash(reimbAmount, reimbAuthor, reimbDescription, reimbId, reimbResolved,
-				reimbResolver, reimbStatus, reimbSubmitted, reimbType);
-		return result;
+		return Objects.hash(reimbAmount, reimbAuthor, reimbDescription, reimbId, reimbResolved, reimbResolver,
+				reimbStatus, reimbSubmitted, reimbType);
 	}
 
 	@Override
@@ -138,9 +134,8 @@ public class Reimbursement {
 		Reimbursement other = (Reimbursement) obj;
 		return Double.doubleToLongBits(reimbAmount) == Double.doubleToLongBits(other.reimbAmount)
 				&& reimbAuthor == other.reimbAuthor && Objects.equals(reimbDescription, other.reimbDescription)
-				&& reimbId == other.reimbId && Arrays.equals(reimbReceipt, other.reimbReceipt)
-				&& Objects.equals(reimbResolved, other.reimbResolved) && reimbResolver == other.reimbResolver
-				&& Objects.equals(reimbStatus, other.reimbStatus)
+				&& reimbId == other.reimbId && Objects.equals(reimbResolved, other.reimbResolved)
+				&& reimbResolver == other.reimbResolver && Objects.equals(reimbStatus, other.reimbStatus)
 				&& Objects.equals(reimbSubmitted, other.reimbSubmitted) && Objects.equals(reimbType, other.reimbType);
 	}
 
@@ -148,10 +143,10 @@ public class Reimbursement {
 	public String toString() {
 		return "Reimbursement [reimbId=" + reimbId + ", reimbAmount=" + reimbAmount + ", reimbSubmitted="
 				+ reimbSubmitted + ", reimbResolved=" + reimbResolved + ", reimbStatus=" + reimbStatus + ", reimbType="
-				+ reimbType + ", reimbDescription=" + reimbDescription + ", reimbReceipt="
-				+ Arrays.toString(reimbReceipt) + ", reimbAuthor=" + reimbAuthor + ", reimbResolver=" + reimbResolver
-				+ "]";
+				+ reimbType + ", reimbDescription=" + reimbDescription + ", reimbAuthor=" + reimbAuthor
+				+ ", reimbResolver=" + reimbResolver + "]";
 	}
-	
+
+
 		
 }
