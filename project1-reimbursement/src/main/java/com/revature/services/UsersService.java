@@ -54,6 +54,7 @@ public class UsersService {
 		if (addDto.getReimbDescription().trim().equals("")) {
 			throw new InvalidParameterException("Please put some description on why you want a Reimbursement...");
 		}
+		
 		int reimbAuthor = user.getErsUserId();
 		Reimbursement insertNewReimbursement = this.userDao.insertNewReimbursement(reimbAuthor, addDto);
 

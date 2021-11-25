@@ -4,8 +4,13 @@ import com.revature.models.Users;
 
 public class AuthorizationService {
 	
+	public void authorizeEmployeeandFinanceManager(Users user) throws UnauthorizedException {
+		if (user == null || !(user.getErsRole().equals("Employee") || user.getErsRole().equals("Finance Manager"))) {
+			throw new UnauthorizedException("You must be an Finance Manager/Employee to access this resource");
+		}
+	}
+	
 	public void authorizeEmployee(Users user) throws UnauthorizedException {
-		// If the user is not either a regular role or admin role
 		if (user == null || !user.getErsRole().equals("Employee")) {
 			throw new UnauthorizedException("You must be an Employee to access this resource");
 		}

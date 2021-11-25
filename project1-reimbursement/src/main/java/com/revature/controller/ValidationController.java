@@ -21,8 +21,7 @@ public class ValidationController implements MapEndpoints{
 	
 	private Handler login = (ctx) -> {
 	
-		LoginCredentialsDTO login = ctx.bodyAsClass(LoginCredentialsDTO.class);
-		
+		LoginCredentialsDTO login = ctx.bodyAsClass(LoginCredentialsDTO.class);		
 		Users user = this.userService.getUserByUsernameAndPassword(login.getErsUsername(), login.getErsPassword());
 		
 		HttpServletRequest req = ctx.req;
@@ -57,8 +56,8 @@ public class ValidationController implements MapEndpoints{
 	private Handler checkLoginStatus = (ctx) -> {
 		HttpSession session = ctx.req.getSession();
 		
-		if (!(session.getAttribute("validateuser") == null)) {
-			ctx.json(session.getAttribute("currentuser"));
+		if (!(session.getAttribute("validateduser") == null)) {
+			ctx.json(session.getAttribute("validateduser"));
 			ctx.status(200);
 		} else {
 			ctx.json(new ExceptionMessageDTO("You're not logged in"));
@@ -71,6 +70,7 @@ public class ValidationController implements MapEndpoints{
 	public void mapEndpoints(Javalin app) {
 		app.post("/login", login);
 		app.post("/logout", logout);
+		app.get("loginStatus", checkLoginStatus);
 		
 	}
 

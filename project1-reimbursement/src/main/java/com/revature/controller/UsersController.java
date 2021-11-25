@@ -28,7 +28,7 @@ public class UsersController implements MapEndpoints {
 	public Handler addReimbursement = (ctx) ->  {
 		
 		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
-		this.authService.authorizeEmployee(user);
+		this.authService.authorizeEmployeeandFinanceManager(user);
 
 		AddReimbursementDTO addDto = ctx.bodyAsClass(AddReimbursementDTO.class);
 
