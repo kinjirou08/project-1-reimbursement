@@ -1,5 +1,6 @@
 package com.revature.dao;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.dto.AddReimbursementDTO;
-import com.revature.dto.UpdateReimbursementDTO;
 import com.revature.models.Reimbursement;
 import com.revature.models.Users;
 import com.revature.util.JDBCUtility;
@@ -41,8 +41,6 @@ public class UsersDAO {
 	}
 
 	public Reimbursement insertNewReimbursement(int usersId, AddReimbursementDTO addDto) throws SQLException {
-
-		Reimbursement reimb = new Reimbursement();
 
 		try (Connection con = JDBCUtility.getConnection()) {
 
@@ -83,8 +81,8 @@ public class UsersDAO {
 			while (rs.next()) {
 				listOfReimbursements.add(new Reimbursement(rs.getInt("reimb_id"), rs.getDouble("reimb_amount"),
 						rs.getString("reimb_submitted"), rs.getString("reimb_resolved"), rs.getString("reimb_status"),
-						rs.getString("reimb_type"), rs.getString("reimb_description"),
-						rs.getInt("fk_reimb_author"), rs.getInt("fk_reimb_resolver")));
+						rs.getString("reimb_type"), rs.getString("reimb_description"), rs.getInt("fk_reimb_author"),
+						rs.getInt("fk_reimb_resolver")));
 			}
 		}
 		return listOfReimbursements;
@@ -106,8 +104,8 @@ public class UsersDAO {
 			while (rs.next()) {
 				listOfReimbursements.add(new Reimbursement(rs.getInt("reimb_id"), rs.getDouble("reimb_amount"),
 						rs.getString("reimb_submitted"), rs.getString("reimb_resolved"), rs.getString("reimb_status"),
-						rs.getString("reimb_type"), rs.getString("reimb_description"),
-						rs.getInt("fk_reimb_author"), rs.getInt("fk_reimb_resolver")));
+						rs.getString("reimb_type"), rs.getString("reimb_description"), rs.getInt("fk_reimb_author"),
+						rs.getInt("fk_reimb_resolver")));
 			}
 		}
 		return listOfReimbursements;
@@ -134,61 +132,66 @@ public class UsersDAO {
 		}
 	}
 
-//	public Reimbursement updateReimbursement(int uId, int rId, Reimbursement getReimbursementById,
-//			UpdateReimbursementDTO editDto) throws SQLException {
-//
-//		try (Connection con = JDBCUtility.getConnection()) {
-//
-//			String sql = "UPDATE ers_reimbursement\r\n"
-//					+ "SET reimb_resolved = now(), fk_reimb_resolver = ?, reimb_status = ?\r\n" + "WHERE reimb_id = ?;";
-//			PreparedStatement ps = con.prepareStatement(sql);
-//
-//			ps.setInt(1, uId);
-//			ps.setString(2, editDto.getReimbStatus());
-//			ps.setInt(3, rId);
-//
-//			ps.executeUpdate();
-//
-//			getReimbursementById = selectReimbursementById(rId);
-//
-//			return new Reimbursement(rId, getReimbursementById.getReimbAmount(),
-//					getReimbursementById.getReimbSubmitted(), getReimbursementById.getReimbResolved(),
-//					editDto.getReimbStatus(), getReimbursementById.getReimbType(),
-//					getReimbursementById.getReimbDescription(),getReimbursementById.getReimbAuthor(), uId);
-//		}
-//
-//	}
+	public Reimbursement updateReimbursement(int reimbAuthor, int reimbId, Reimbursement getReimbursementById,
+			String reimbStatus) throws SQLException, IOException {
 
-
-	public Reimbursement updateReimbursement(int reimbAuthor, int rId, Reimbursement getReimbursementById,
-			String reimbStatus, InputStream receipt) throws SQLException {
-		
 		try (Connection con = JDBCUtility.getConnection()) {
-			con.setAutoCommit(false);
 
 			String sql = "UPDATE ers_reimbursement\r\n"
-					+ "SET reimb_resolved = now(), fk_reimb_resolver = ?, reimb_status = ?, reimb_receipt = ?\r\n"
-					+ "WHERE reimb_id = ?;";
+					+ "SET reimb_resolved = now(), fk_reimb_resolver = ?, reimb_status = ?\r\n" + "WHERE reimb_id = ?;";
 			PreparedStatement ps = con.prepareStatement(sql);
 
 			ps.setInt(1, reimbAuthor);
 			ps.setString(2, reimbStatus);
-			ps.setBinaryStream(3, receipt);
-			ps.setInt(4, rId);
+			ps.setInt(3, reimbId);
 
 			ps.executeUpdate();
 
-			getReimbursementById = selectReimbursementById(rId);
-			
-			con.commit();
+			getReimbursementById = selectReimbursementById(reimbId);
 
-			return new Reimbursement(rId, getReimbursementById.getReimbAmount(),
-					getReimbursementById.getReimbSubmitted(), getReimbursementById.getReimbResolved(),
-					reimbStatus, getReimbursementById.getReimbType(),
-					getReimbursementById.getReimbDescription(),getReimbursementById.getReimbAuthor(), reimbAuthor);
+			InputStream receipt = ReceiptMaker.makeReceipt(getReimbursementById);
+
+			updateReceipt(reimbId, getReimbursementById, receipt);
+
+			return new Reimbursement(reimbId, getReimbursementById.getReimbAmount(),
+					getReimbursementById.getReimbSubmitted(), getReimbursementById.getReimbResolved(), reimbStatus,
+					getReimbursementById.getReimbType(), getReimbursementById.getReimbDescription(),
+					getReimbursementById.getReimbAuthor(), reimbAuthor);
+		}
+	}
+
+	private void updateReceipt(int rId, Reimbursement getReimbursementById, InputStream receipt)
+			throws SQLException, IOException {
+		try (Connection con = JDBCUtility.getConnection()) {
+			String sql = "UPDATE ers_reimbursement\r\n" + "SET reimb_receipt = ?\r\n" + "WHERE reimb_id = ?;";
+			PreparedStatement ps = con.prepareStatement(sql);
+
+			ps.setBinaryStream(1, receipt);
+			ps.setInt(2, rId);
+
+			ps.executeUpdate();
 		}
 
-		
+	}
+
+	public InputStream selectReceiptFromReimbursementById(int id) throws SQLException {
+		try (Connection con = JDBCUtility.getConnection()) {
+			String sql = "SELECT reimb_receipt FROM ers_reimbursement WHERE reimb_id = ?";
+
+			PreparedStatement ps = con.prepareStatement(sql);
+
+			ps.setInt(1, id);
+
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				InputStream image = rs.getBinaryStream("reimb_receipt");
+
+				return image;
+			}
+
+			return null;
+		}
 	}
 
 }

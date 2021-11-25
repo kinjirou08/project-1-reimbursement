@@ -67,20 +67,26 @@ public class UsersController implements MapEndpoints {
 
 		String reimbId = ctx.pathParam("reimb_id");
 		String reimbStatus = ctx.formParam("reimbStatus");
-		
-		UploadedFile reimbReceipt = ctx.uploadedFile("reimbReceipt");
-		InputStream receipt = reimbReceipt.getContent();
-		
-		Tika tika = new Tika();
-		//String mimeType = tika.detect(receipt);
-		
-		//UpdateReimbursementDTO editDto = ctx.bodyAsClass(UpdateReimbursementDTO.class);
 
-		//Reimbursement reimbToBeUpdated = this.userService.editReimbursement(user, reimbId, editDto);
-		Reimbursement reimbToBeUpdated = this.userService.editReimbursement(user, reimbId, reimbStatus, receipt);
+		Reimbursement reimbToBeUpdated = this.userService.editReimbursement(user, reimbId, reimbStatus);
 
 		ctx.json(reimbToBeUpdated);
 
+	};
+	private Handler getReceiptFromReimbursementById = (ctx) -> {
+		// protect endpoint
+		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
+		this.authService.authorizeFinanceManager(user);
+		
+		String reimbId = ctx.pathParam("id");
+		
+		InputStream receipt = this.userService.getReceiptFromReimbursementById(user, reimbId);
+		
+		Tika tika = new Tika();
+		String mimeType = tika.detect(receipt);
+		
+		ctx.contentType(mimeType); 
+		ctx.result(receipt); 
 	};
 
 	@Override
@@ -88,7 +94,8 @@ public class UsersController implements MapEndpoints {
 		app.post("/newReimbursement", addReimbursement);
 		app.get("/reimbursements", getAllReimbursement);
 		app.get("/reimbursements/{user_id}", getAllReimbursementById);
-		app.put("/reimbursements/{reimb_id}/update", editReimbursement);
+		app.patch("/reimbursements/{reimb_id}/update", editReimbursement);
+		app.get("/reimbursements/{id}/image", getReceiptFromReimbursementById);
 	}
 
 }
