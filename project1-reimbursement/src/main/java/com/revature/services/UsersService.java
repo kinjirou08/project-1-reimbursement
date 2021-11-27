@@ -3,6 +3,9 @@ package com.revature.services;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
@@ -12,8 +15,9 @@ import javax.security.auth.login.FailedLoginException;
 
 import com.revature.dao.UsersDAO;
 import com.revature.dto.AddReimbursementDTO;
-import com.revature.dto.UpdateReimbursementDTO;
+import com.revature.dto.NewUsersDTO;
 import com.revature.exceptions.ReimbursementNotFoundExcpetion;
+import com.revature.exceptions.UnauthorizedException;
 import com.revature.models.Reimbursement;
 import com.revature.models.Users;
 
@@ -54,7 +58,7 @@ public class UsersService {
 		if (addDto.getReimbDescription().trim().equals("")) {
 			throw new InvalidParameterException("Please put some description on why you want a Reimbursement...");
 		}
-		
+
 		int reimbAuthor = user.getErsUserId();
 		Reimbursement insertNewReimbursement = this.userDao.insertNewReimbursement(reimbAuthor, addDto);
 
@@ -90,24 +94,60 @@ public class UsersService {
 		if (getReimbursementById.getReimbAuthor() == reimbAuthor) {
 			throw new UnauthorizedException("Cannot approve/reject your own Reimbursement request!");
 		}
-	
+
 		Reimbursement reimbToBeUpdated = this.userDao.updateReimbursement(reimbAuthor, rId, getReimbursementById,
 				reimbStatus);
 		return reimbToBeUpdated;
 
 	}
 
-	public InputStream getReceiptFromReimbursementById(Users currentlyLoggedInUser, String reimbId) throws SQLException {
-		
+	public InputStream getReceiptFromReimbursementById(Users currentlyLoggedInUser, String reimbId)
+			throws SQLException {
+
 		int id = Integer.parseInt(reimbId);
-		
+
 		InputStream receipt = this.userDao.selectReceiptFromReimbursementById(id);
-		
+
 		if (receipt == null) {
 			throw new InvalidParameterException("Image was not found for assignment id " + id);
 		}
-		
+
 		return receipt;
+	}
+
+	public Users newUser(NewUsersDTO newUser) throws NoSuchAlgorithmException, NoSuchProviderException, SQLException, InvalidKeySpecException {
+
+		if (newUser.getErsFirstName().trim().equals("")) {
+			throw new InvalidParameterException("First Name field must not be empty!");
+		}
+
+		if (newUser.getErsLastName().trim().equals("")) {
+			throw new InvalidParameterException("Last Name field must not be empty!");
+		}
+
+		if (newUser.getErsUsername().trim().equals("")) {
+			throw new InvalidParameterException("Username field must not be empty!");
+		}
+
+		if (newUser.getErsPassword().trim().equals("")) {
+			throw new InvalidParameterException("Password field must not be empty!");
+		}
+
+		if (newUser.getErsEmail().trim().equals("")) {
+			throw new InvalidParameterException("Email field must not be empty!");
+		}
+
+		Set<String> validErsRole = new HashSet<>();
+		validErsRole.add("Finance Manager");
+		validErsRole.add("Employee");
+
+		if (!validErsRole.contains(newUser.getErsRole())) {
+			throw new InvalidParameterException("Role must be of Finance Manager or Employee!");
+		}	
+
+		Users insertNewUser = this.userDao.insertNewUser(newUser);
+
+		return insertNewUser;
 	}
 
 //	public Reimbursement editReimbursement(Users user, String reimbId, UpdateReimbursementDTO editDto) throws SQLException, ReimbursementNotFoundExcpetion, UnauthorizedException {

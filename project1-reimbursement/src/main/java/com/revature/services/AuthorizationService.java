@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import com.revature.exceptions.UnauthorizedException;
 import com.revature.models.Users;
 
 public class AuthorizationService {

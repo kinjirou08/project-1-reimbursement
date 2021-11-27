@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 
 import com.revature.dto.ExceptionMessageDTO;
 import com.revature.dto.LoginCredentialsDTO;
+import com.revature.dto.NewUsersDTO;
 import com.revature.models.Users;
 import com.revature.services.UsersService;
 
@@ -64,13 +65,23 @@ public class ValidationController implements MapEndpoints{
 			ctx.status(401);
 		}
 	};
-
-
+	
+	public Handler signup = (ctx) -> {
+		
+		NewUsersDTO newUser = ctx.bodyAsClass(NewUsersDTO.class);
+		
+		Users user = this.userService.newUser(newUser);
+		
+		ctx.json(user);
+		
+	};
+	
 	@Override
 	public void mapEndpoints(Javalin app) {
 		app.post("/login", login);
 		app.post("/logout", logout);
 		app.get("loginStatus", checkLoginStatus);
+		app.post("/signup", signup);
 		
 	}
 

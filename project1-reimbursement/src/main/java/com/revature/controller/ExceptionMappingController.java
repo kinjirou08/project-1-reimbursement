@@ -4,7 +4,7 @@ import java.security.InvalidParameterException;
 
 import com.revature.dto.ExceptionMessageDTO;
 import com.revature.exceptions.ReimbursementNotFoundExcpetion;
-import com.revature.services.UnauthorizedException;
+import com.revature.exceptions.UnauthorizedException;
 
 import io.javalin.Javalin;
 

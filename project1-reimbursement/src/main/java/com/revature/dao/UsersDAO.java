@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.dto.AddReimbursementDTO;
+import com.revature.dto.NewUsersDTO;
 import com.revature.models.Reimbursement;
 import com.revature.models.Users;
 import com.revature.util.JDBCUtility;
@@ -20,8 +21,8 @@ public class UsersDAO {
 	public Users selectUserByUsernameAndPassword(String ers_username, String ers_password) throws SQLException {
 
 		try (Connection con = JDBCUtility.getConnection()) {
-
-			String sql = "SELECT * FROM ers_users WHERE ers_username = ? AND ers_password = ?";
+			
+			String sql = "SELECT * FROM ers_users WHERE ers_username = ? AND ers_password = crypt(?,ers_password)";
 			PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			ps.setString(1, ers_username);
@@ -30,7 +31,7 @@ public class UsersDAO {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				return new Users(rs.getInt("user_id"), rs.getString("ers_username"), rs.getString("ers_password"),
+				return new Users(rs.getInt("user_id"), rs.getString("ers_username"), "----------------",
 						rs.getString("user_first_name"), rs.getString("user_last_name"), rs.getString("user_email"),
 						rs.getString("user_role"));
 			} else {
@@ -60,9 +61,9 @@ public class UsersDAO {
 			rs.next();
 			int autoGenKeys = rs.getInt(1);
 
-			return new Reimbursement(autoGenKeys, addDto.getReimbAmount(), rs.getString("reimb_submitted"),
-					rs.getString("reimb_resolved"), rs.getString("reimb_status"), addDto.getReimbType(),
-					addDto.getReimbDescription(), usersId, 0);
+			return new Reimbursement(autoGenKeys, rs.getDouble("reimb_amount"), rs.getString("reimb_submitted"),
+					rs.getString("reimb_resolved"), rs.getString("reimb_status"), rs.getString("reimb_type"),
+					rs.getString("reimb_description"), usersId, 0);
 		}
 
 	}
@@ -192,6 +193,41 @@ public class UsersDAO {
 
 			return null;
 		}
+	}
+
+	public Users insertNewUser(NewUsersDTO newUser) throws SQLException {
+		
+		try (Connection con = JDBCUtility.getConnection()) {
+			String sql = "INSERT INTO ers_users (ers_username, ers_password, user_first_name, user_last_name, user_email, user_role)\r\n"
+					+ "	VALUES\r\n"
+					+ "		(?,crypt(?, gen_salt('bf')),?,?,?,?);";
+			PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			
+			ps.setString(1, newUser.getErsUsername());
+			ps.setString(2, newUser.getErsPassword());
+			ps.setString(3, newUser.getErsFirstName());
+			ps.setString(4, newUser.getErsLastName());
+			ps.setString(5, newUser.getErsEmail());
+			ps.setString(6, newUser.getErsRole());
+			
+			ps.execute();
+			
+			ResultSet rs = ps.getGeneratedKeys();
+			
+			rs.next();
+			int generatedId = rs.getInt(1);
+			
+			int passwordLength = newUser.getErsPassword().length();
+			String convertToAsterisk = "";
+			
+			for (int i = 0; i < passwordLength; i++) {
+				convertToAsterisk += "*";
+			}		
+			
+			return new Users(generatedId, rs.getString("ers_username"), convertToAsterisk, rs.getString("user_first_name"),
+					rs.getString("user_last_name"), rs.getString("user_email"), rs.getString("user_role"));					
+		}
+		
 	}
 
 }
