@@ -30,7 +30,7 @@ public class ValidationController implements MapEndpoints{
 		
 		session.setAttribute("validateduser", user);
 			
-		ctx.result("Redirecting...");
+		ctx.json(user);
 		
 	};	
 //		if (username.equals("username") && password.equals("password")) {			
