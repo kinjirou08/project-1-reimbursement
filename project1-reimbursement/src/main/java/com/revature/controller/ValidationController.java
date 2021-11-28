@@ -33,21 +33,7 @@ public class ValidationController implements MapEndpoints{
 		ctx.json(user);
 		
 	};	
-//		if (username.equals("username") && password.equals("password")) {			
-//			if (req.getSession(false) != null) { //not necessarily needed
-//				ctx.result("You're already logged in!");// not necessarily needed
-//			} else { 			
-//				HttpSession session = req.getSession();
-//				session.setAttribute("currentuser", username);
-//				ctx.result("Success!");
-//			}
-//		} else {
-//			ctx.result("Invalid username and/or password");
-//		}
-		
-		//req.getSession().invalidate(); ---> to invalidate that session
-		//ctx.redirect("/empHomePage");
-		
+
 	private Handler logout = (ctx) -> {
 		HttpServletRequest req = ctx.req;
 		
@@ -61,7 +47,7 @@ public class ValidationController implements MapEndpoints{
 			ctx.json(session.getAttribute("validateduser"));
 			ctx.status(200);
 		} else {
-			ctx.json(new ExceptionMessageDTO("You're not logged in"));
+			ctx.json(new ExceptionMessageDTO("User is not logged in"));
 			ctx.status(401);
 		}
 	};
@@ -80,7 +66,7 @@ public class ValidationController implements MapEndpoints{
 	public void mapEndpoints(Javalin app) {
 		app.post("/login", login);
 		app.post("/logout", logout);
-		app.get("loginStatus", checkLoginStatus);
+		app.get("/loginStatus", checkLoginStatus);
 		app.post("/signup", signup);
 		
 	}
