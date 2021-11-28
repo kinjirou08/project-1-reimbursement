@@ -21,7 +21,7 @@ public class UsersDAO {
 	public Users selectUserByUsernameAndPassword(String ers_username, String ers_password) throws SQLException {
 
 		try (Connection con = JDBCUtility.getConnection()) {
-			
+
 			String sql = "SELECT * FROM ers_users WHERE ers_username = ? AND ers_password = crypt(?,ers_password)";
 			PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -88,6 +88,30 @@ public class UsersDAO {
 		}
 		return listOfReimbursements;
 	}
+	
+	public List<Reimbursement> selectAllReimbursementsByStatus(String reimbStatus) throws SQLException {
+		
+		List<Reimbursement> listOfReimbursements = new ArrayList<>();
+
+		
+		try (Connection con = JDBCUtility.getConnection()) {
+
+			String sql = "SELECT * FROM ers_reimbursement WHERE reimb_status = ? ORDER BY reimb_id;";
+			PreparedStatement ps = con.prepareStatement(sql);
+			
+			ps.setString(1, reimbStatus);
+
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				listOfReimbursements.add(new Reimbursement(rs.getInt("reimb_id"), rs.getDouble("reimb_amount"),
+						rs.getString("reimb_submitted"), rs.getString("reimb_resolved"), rs.getString("reimb_status"),
+						rs.getString("reimb_type"), rs.getString("reimb_description"), rs.getInt("fk_reimb_author"),
+						rs.getInt("fk_reimb_resolver")));
+			}
+		}
+		return listOfReimbursements;
+	}
 
 	public List<Reimbursement> selectAllReimbursementsById(int id) throws SQLException {
 
@@ -111,7 +135,7 @@ public class UsersDAO {
 		}
 		return listOfReimbursements;
 	}
-
+	
 	public Reimbursement selectReimbursementById(int rId) throws SQLException {
 
 		try (Connection con = JDBCUtility.getConnection()) {
@@ -196,38 +220,40 @@ public class UsersDAO {
 	}
 
 	public Users insertNewUser(NewUsersDTO newUser) throws SQLException {
-		
+
 		try (Connection con = JDBCUtility.getConnection()) {
 			String sql = "INSERT INTO ers_users (ers_username, ers_password, user_first_name, user_last_name, user_email, user_role)\r\n"
-					+ "	VALUES\r\n"
-					+ "		(?,crypt(?, gen_salt('bf')),?,?,?,?);";
+					+ "	VALUES\r\n" + "		(?,crypt(?, gen_salt('bf')),?,?,?,?);";
 			PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			
+
 			ps.setString(1, newUser.getErsUsername());
 			ps.setString(2, newUser.getErsPassword());
 			ps.setString(3, newUser.getErsFirstName());
 			ps.setString(4, newUser.getErsLastName());
 			ps.setString(5, newUser.getErsEmail());
 			ps.setString(6, newUser.getErsRole());
-			
+
 			ps.execute();
-			
+
 			ResultSet rs = ps.getGeneratedKeys();
-			
+
 			rs.next();
 			int generatedId = rs.getInt(1);
-			
+
 			int passwordLength = newUser.getErsPassword().length();
 			String convertToAsterisk = "";
-			
+
 			for (int i = 0; i < passwordLength; i++) {
 				convertToAsterisk += "*";
-			}		
-			
-			return new Users(generatedId, rs.getString("ers_username"), convertToAsterisk, rs.getString("user_first_name"),
-					rs.getString("user_last_name"), rs.getString("user_email"), rs.getString("user_role"));					
+			}
+
+			return new Users(generatedId, rs.getString("ers_username"), convertToAsterisk,
+					rs.getString("user_first_name"), rs.getString("user_last_name"), rs.getString("user_email"),
+					rs.getString("user_role"));
+		} catch (SQLException e) {
+			throw new SQLException("Username already exists!");
 		}
-		
+
 	}
 
 }

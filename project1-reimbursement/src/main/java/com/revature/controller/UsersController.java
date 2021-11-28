@@ -25,8 +25,8 @@ public class UsersController implements MapEndpoints {
 		this.authService = new AuthorizationService();
 	}
 
-	public Handler addReimbursement = (ctx) ->  {
-		
+	public Handler addReimbursement = (ctx) -> {
+
 		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
 		this.authService.authorizeEmployeeandFinanceManager(user);
 
@@ -39,20 +39,27 @@ public class UsersController implements MapEndpoints {
 	};
 
 	public Handler getAllReimbursement = (ctx) -> {
-		
+
 		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
 		this.authService.authorizeFinanceManager(user);
-		
-		List<Reimbursement> listOfReimbursements = this.userService.getAllReimbursement();
 
-		ctx.json(listOfReimbursements);
+		String reimbStatus = ctx.queryParam("reimbStatus");
+
+		if (reimbStatus == null) {
+			List<Reimbursement> listOfReimbursements = this.userService.getAllReimbursement();
+			ctx.json(listOfReimbursements);
+		} else {
+			List<Reimbursement> listOfReimbursements = this.userService.getAllReimbursementByStatus(reimbStatus);
+			ctx.json(listOfReimbursements);
+		}
+
 	};
-	
+
 	public Handler getAllReimbursementById = (ctx) -> {
-		
+
 		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
 		this.authService.authorizeEmployee(user);
-		
+
 		String userId = ctx.pathParam("user_id");
 
 		List<Reimbursement> listOfReimbursements = this.userService.getAllReimbursementById(userId);
@@ -61,7 +68,7 @@ public class UsersController implements MapEndpoints {
 	};
 
 	public Handler editReimbursement = (ctx) -> {
-		
+
 		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
 		this.authService.authorizeFinanceManager(user);
 
@@ -77,16 +84,16 @@ public class UsersController implements MapEndpoints {
 		// protect endpoint
 		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
 		this.authService.authorizeFinanceManager(user);
-		
+
 		String reimbId = ctx.pathParam("id");
-		
+
 		InputStream receipt = this.userService.getReceiptFromReimbursementById(user, reimbId);
-		
+
 		Tika tika = new Tika();
 		String mimeType = tika.detect(receipt);
-		
-		ctx.contentType(mimeType); 
-		ctx.result(receipt); 
+
+		ctx.contentType(mimeType);
+		ctx.result(receipt);
 	};
 
 	@Override

@@ -150,6 +150,20 @@ public class UsersService {
 		return insertNewUser;
 	}
 
+	public List<Reimbursement> getAllReimbursementByStatus(String reimbStatus) throws SQLException {
+		
+		Set<String> validStatus = new HashSet<>();
+		validStatus.add("Pending");
+		validStatus.add("Approved");
+		validStatus.add("Rejected");
+
+		if (!validStatus.contains(reimbStatus)) {
+			throw new InvalidParameterException("Reimbursement Status can only be: Pending, Approved, or Rejected!");
+		}		
+		
+		return this.userDao.selectAllReimbursementsByStatus(reimbStatus);
+	}
+
 //	public Reimbursement editReimbursement(Users user, String reimbId, UpdateReimbursementDTO editDto) throws SQLException, ReimbursementNotFoundExcpetion, UnauthorizedException {
 //		
 //		int rId = Integer.parseInt(reimbId);
