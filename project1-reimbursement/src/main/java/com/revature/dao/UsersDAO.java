@@ -10,7 +10,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revature.dto.AddReimbursementDTO;
 import com.revature.dto.NewUsersDTO;
 import com.revature.models.Reimbursement;
 import com.revature.models.Users;
@@ -41,18 +40,20 @@ public class UsersDAO {
 
 	}
 
-	public Reimbursement insertNewReimbursement(int usersId, AddReimbursementDTO addDto) throws SQLException {
+	public Reimbursement insertNewReimbursement(int usersId, double reimbAmount, String reimbType, String reimbDescription, InputStream content) throws SQLException {
 
 		try (Connection con = JDBCUtility.getConnection()) {
 
-			String sql = "INSERT INTO ers_reimbursement (reimb_amount, reimb_submitted, reimb_type, reimb_description, fk_reimb_author)\r\n"
-					+ "VALUES\r\n" + "(?, now(), ?, ?, ?);";
+			String sql = "INSERT INTO ers_reimbursement (reimb_amount, reimb_submitted, reimb_type, reimb_description, reimb_customer_receipt, fk_reimb_author)\r\n"
+					+ "VALUES\r\n"
+					+ "(?, now(), ?, ?, ?, ?);";
 			PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-			ps.setDouble(1, addDto.getReimbAmount());
-			ps.setString(2, addDto.getReimbType());
-			ps.setString(3, addDto.getReimbDescription());
-			ps.setInt(4, usersId);
+			ps.setDouble(1, reimbAmount);
+			ps.setString(2, reimbType);
+			ps.setString(3, reimbDescription);
+			ps.setBinaryStream(4, content);
+			ps.setInt(5, usersId);
 
 			ps.execute();
 
@@ -211,6 +212,26 @@ public class UsersDAO {
 
 			if (rs.next()) {
 				InputStream image = rs.getBinaryStream("reimb_receipt");
+
+				return image;
+			}
+
+			return null;
+		}
+	}
+	
+	public InputStream selectCustomerReceiptFromReimbursementById(int id) throws SQLException {
+		try (Connection con = JDBCUtility.getConnection()) {
+			String sql = "SELECT reimb_customer_receipt FROM ers_reimbursement WHERE reimb_id = ?";
+
+			PreparedStatement ps = con.prepareStatement(sql);
+
+			ps.setInt(1, id);
+
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				InputStream image = rs.getBinaryStream("reimb_customer_receipt");
 
 				return image;
 			}

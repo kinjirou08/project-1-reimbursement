@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.tika.Tika;
 
-import com.revature.dto.AddReimbursementDTO;
+import com.revature.dto.ExceptionMessageDTO;
 import com.revature.models.Reimbursement;
 import com.revature.models.Users;
 import com.revature.services.AuthorizationService;
@@ -30,9 +30,27 @@ public class UsersController implements MapEndpoints {
 		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
 		this.authService.authorizeEmployeeandFinanceManager(user);
 
-		AddReimbursementDTO addDto = ctx.bodyAsClass(AddReimbursementDTO.class);
+		//AddReimbursementDTO addDto = ctx.bodyAsClass(AddReimbursementDTO.class);
+		
+		String reimbAmount = ctx.formParam("reimbAmount");
+		String reimbType = ctx.formParam("reimbType");
+		String reimbDescription = ctx.formParam("reimbDescription");
+		
+		UploadedFile file = ctx.uploadedFile("reimbCustomerReceipt");
+		
+		if (file == null) {
+			ctx.status(400);
+			ctx.json(new ExceptionMessageDTO("Must have an image to upload"));
+			return;
+		}
+		
+		InputStream content = file.getContent(); // This is the most important. It is the actual content of the file
 
-		Reimbursement newReimbursement = this.userService.newReimbursement(user, addDto);
+		Tika tika = new Tika();
+		
+		String mimeType = tika.detect(content);
+
+		Reimbursement newReimbursement = this.userService.newReimbursement(user, reimbAmount, reimbType, reimbDescription, mimeType, content);
 
 		ctx.json(newReimbursement);
 
@@ -59,10 +77,9 @@ public class UsersController implements MapEndpoints {
 
 		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
 		this.authService.authorizeEmployee(user);
+		
 
-		String userId = ctx.pathParam("user_id");
-
-		List<Reimbursement> listOfReimbursements = this.userService.getAllReimbursementById(userId);
+		List<Reimbursement> listOfReimbursements = this.userService.getAllReimbursementById(user);
 
 		ctx.json(listOfReimbursements);
 	};
@@ -95,14 +112,31 @@ public class UsersController implements MapEndpoints {
 		ctx.contentType(mimeType);
 		ctx.result(receipt);
 	};
+	
+	private Handler geCustomerReceiptFromReimbursementById = (ctx) -> {
+		// protect endpoint
+		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
+		this.authService.authorizeEmployeeandFinanceManager(user);
+
+		String reimbId = ctx.pathParam("id");
+
+		InputStream receipt = this.userService.getCustomerReceiptFromReimbursementById(user, reimbId);
+
+		Tika tika = new Tika();
+		String mimeType = tika.detect(receipt);
+
+		ctx.contentType(mimeType);
+		ctx.result(receipt);
+	};
 
 	@Override
 	public void mapEndpoints(Javalin app) {
 		app.post("/newReimbursement", addReimbursement);
 		app.get("/reimbursements", getAllReimbursement);
-		app.get("/reimbursements/{user_id}", getAllReimbursementById);
+		app.get("/reimbursements/user", getAllReimbursementById);
 		app.patch("/reimbursements/{reimb_id}/update", editReimbursement);
-		app.get("/reimbursements/{id}/image", getReceiptFromReimbursementById);
+		app.get("/reimbursements/{id}/reimbursementReceipt", getReceiptFromReimbursementById);
+		app.get("/reimbursements/{id}/customerReceipt", geCustomerReceiptFromReimbursementById);
 	}
 
 }

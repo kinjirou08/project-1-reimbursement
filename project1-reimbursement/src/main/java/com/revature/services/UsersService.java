@@ -41,40 +41,38 @@ public class UsersService {
 		return user;
 	}
 
-	public Reimbursement newReimbursement(Users user, AddReimbursementDTO addDto) throws SQLException {
-
-		if (addDto.getReimbAmount() == 0) {
-			throw new InvalidParameterException("Reimbursement Amount cannot be empty and/or Zero!");
-		}
-		Set<String> validReimbType = new HashSet<>();
-		validReimbType.add("Food");
-		validReimbType.add("Lodging");
-		validReimbType.add("Travel");
-		validReimbType.add("Other");
-
-		if (!validReimbType.contains(addDto.getReimbType())) {
-			throw new InvalidParameterException("Reimbursement Type can only be: Food, Lodging, Travel, or Other");
-		}
-		if (addDto.getReimbDescription().trim().equals("")) {
-			throw new InvalidParameterException("Please put some description on why you want a Reimbursement...");
-		}
-
-		int reimbAuthor = user.getErsUserId();
-		Reimbursement insertNewReimbursement = this.userDao.insertNewReimbursement(reimbAuthor, addDto);
-
-		return insertNewReimbursement;
-	}
+//	public Reimbursement newReimbursement(Users user, AddReimbursementDTO addDto) throws SQLException {
+//
+//		if (addDto.getReimbAmount() == 0) {
+//			throw new InvalidParameterException("Reimbursement Amount cannot be empty and/or Zero!");
+//		}
+//		Set<String> validReimbType = new HashSet<>();
+//		validReimbType.add("Food");
+//		validReimbType.add("Lodging");
+//		validReimbType.add("Travel");
+//		validReimbType.add("Other");
+//
+//		if (!validReimbType.contains(addDto.getReimbType())) {
+//			throw new InvalidParameterException("Reimbursement Type can only be: Food, Lodging, Travel, or Other");
+//		}
+//		if (addDto.getReimbDescription().trim().equals("")) {
+//			throw new InvalidParameterException("Please put some description on why you want a Reimbursement...");
+//		}
+//
+//		int reimbAuthor = user.getErsUserId();
+//		Reimbursement insertNewReimbursement = this.userDao.insertNewReimbursement(reimbAuthor, addDto);
+//
+//		return insertNewReimbursement;
+//	}
 
 	public List<Reimbursement> getAllReimbursement() throws SQLException {
 
 		return this.userDao.selectAllReimbursements();
 	}
 
-	public List<Reimbursement> getAllReimbursementById(String userId) throws SQLException {
+	public List<Reimbursement> getAllReimbursementById(Users user) throws SQLException {
 
-		int id = Integer.parseInt(userId);
-
-		List<Reimbursement> listOfReimbursementById = this.userDao.selectAllReimbursementsById(id);
+		List<Reimbursement> listOfReimbursementById = this.userDao.selectAllReimbursementsById(user.getErsUserId());
 
 		return listOfReimbursementById;
 	}
@@ -109,11 +107,26 @@ public class UsersService {
 		InputStream receipt = this.userDao.selectReceiptFromReimbursementById(id);
 
 		if (receipt == null) {
-			throw new InvalidParameterException("Image was not found for assignment id " + id);
+			throw new InvalidParameterException("Image was not found for reimbursement id " + id);
 		}
 
 		return receipt;
 	}
+	
+	public InputStream getCustomerReceiptFromReimbursementById(Users currentlyLoggedInUser, String reimbId)
+			throws SQLException {
+
+		int id = Integer.parseInt(reimbId);
+
+		InputStream receipt = this.userDao.selectCustomerReceiptFromReimbursementById(id);
+
+		if (receipt == null) {
+			throw new InvalidParameterException("Image was not found for reimbursement id " + id);
+		}
+
+		return receipt;
+	}
+
 
 	public Users newUser(NewUsersDTO newUser) throws NoSuchAlgorithmException, NoSuchProviderException, SQLException, InvalidKeySpecException {
 
@@ -162,6 +175,43 @@ public class UsersService {
 		}		
 		
 		return this.userDao.selectAllReimbursementsByStatus(reimbStatus);
+	}
+
+	public Reimbursement newReimbursement(Users user, String reimbAmount, String reimbType, String reimbDescription,
+			String mimeType, InputStream content) throws SQLException {
+		
+		if (Double.parseDouble(reimbAmount) == 0) {
+			throw new InvalidParameterException("Reimbursement Amount cannot be empty and/or Zero!");
+		}
+		
+		Set<String> validReimbType = new HashSet<>();
+		validReimbType.add("Food");
+		validReimbType.add("Lodging");
+		validReimbType.add("Travel");
+		validReimbType.add("Other");
+		
+		Set<String> allowedFileTypes = new HashSet<>();
+		allowedFileTypes.add("image/jpeg");
+		allowedFileTypes.add("image/png");
+		allowedFileTypes.add("image/gif");
+		
+		if (!allowedFileTypes.contains(mimeType)) {
+			throw new InvalidParameterException("When adding an assignment image, only PNG, JPEG, or GIF are allowed");
+		}
+
+		if (!validReimbType.contains(reimbType)) {
+			throw new InvalidParameterException("Reimbursement Type can only be: Food, Lodging, Travel, or Other");
+		}
+		if (reimbDescription.trim().equals("")) {
+			throw new InvalidParameterException("Please put some description on why you want a Reimbursement...");
+		}
+
+		int reimbAuthor = user.getErsUserId();
+		double amount = Double.parseDouble(reimbAmount);
+		
+		Reimbursement insertNewReimbursement = this.userDao.insertNewReimbursement(reimbAuthor, amount, reimbType, reimbDescription, content);
+
+		return insertNewReimbursement;
 	}
 
 //	public Reimbursement editReimbursement(Users user, String reimbId, UpdateReimbursementDTO editDto) throws SQLException, ReimbursementNotFoundExcpetion, UnauthorizedException {
