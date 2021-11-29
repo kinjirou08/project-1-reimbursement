@@ -56,10 +56,9 @@ async function isLoggedIn() {
         if (res.status === 200) {
             console.log(data.ersRole);
             if (data.ersRole === 'Employee') {
-                // redirect to associate homepage
                window.location.href = 'employee-home.html';
-        //     } else if (data.ersRole === 'Finance Manager') {
-        //         window.location.href = 'trainer-homepage.html';
+            } else if (data.ersRole === 'Finance Manager') {
+                window.location.href = 'finance-manager-home.html';
             }
         }
 }
