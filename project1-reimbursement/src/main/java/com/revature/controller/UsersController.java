@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.tika.Tika;
 
 import com.revature.dto.ExceptionMessageDTO;
+import com.revature.exceptions.ReimbursementNotFoundExcpetion;
 import com.revature.models.Reimbursement;
 import com.revature.models.Users;
 import com.revature.services.AuthorizationService;
@@ -65,7 +66,11 @@ public class UsersController implements MapEndpoints {
 
 		if (reimbStatus == null) {
 			List<Reimbursement> listOfReimbursements = this.userService.getAllReimbursement();
-			ctx.json(listOfReimbursements);
+			if(listOfReimbursements.isEmpty()) {
+				ctx.result("There is nothing to show here!");
+			} else {
+				ctx.json(listOfReimbursements);
+			}
 		} else {
 			List<Reimbursement> listOfReimbursements = this.userService.getAllReimbursementByStatus(reimbStatus);
 			ctx.json(listOfReimbursements);

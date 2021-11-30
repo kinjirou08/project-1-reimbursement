@@ -44,7 +44,8 @@ public class UsersDAO {
 
 		try (Connection con = JDBCUtility.getConnection()) {
 
-			String sql = "INSERT INTO ers_reimbursement (reimb_amount, reimb_submitted, reimb_type, reimb_description, reimb_customer_receipt, fk_reimb_author)\r\n"
+			String sql = "INSERT INTO ers_reimbursement (reimb_amount, reimb_submitted, reimb_type, "
+					+ "reimb_description, reimb_customer_receipt, fk_reimb_author)\r\n"
 					+ "VALUES\r\n"
 					+ "(?, now(), ?, ?, ?, ?);";
 			PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);

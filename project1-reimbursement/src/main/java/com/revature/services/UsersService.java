@@ -70,10 +70,10 @@ public class UsersService {
 		return this.userDao.selectAllReimbursements();
 	}
 
-	public List<Reimbursement> getAllReimbursementById(Users user) throws SQLException {
+	public List<Reimbursement> getAllReimbursementById(Users user) throws SQLException, ReimbursementNotFoundExcpetion {
 
 		List<Reimbursement> listOfReimbursementById = this.userDao.selectAllReimbursementsById(user.getErsUserId());
-
+			
 		return listOfReimbursementById;
 	}
 
