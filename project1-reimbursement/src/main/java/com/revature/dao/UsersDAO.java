@@ -244,7 +244,7 @@ public class UsersDAO {
 
 		try (Connection con = JDBCUtility.getConnection()) {
 			String sql = "INSERT INTO ers_users (ers_username, ers_password, user_first_name, user_last_name, user_email, user_role)\r\n"
-					+ "	VALUES\r\n" + "		(?,crypt(?, gen_salt('bf')),?,?,?,?);";
+					+ "	VALUES\r\n" + "	(?,crypt(?, gen_salt('bf')),?,?,?,?);";
 			PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			ps.setString(1, newUser.getErsUsername());

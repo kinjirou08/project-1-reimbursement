@@ -16,7 +16,6 @@ async function checkLoginStatus() {
         }
     }
 }
-    
 
 let loginButton = document.querySelector('#loginBtn');
 
@@ -38,7 +37,7 @@ async function isLoggedIn() {
         let data = await res.json();
 
         // Check if login is incorrect or not
-        
+
         // if the status code is 400, data will represent an object
         // with the "message" property, which we can display
         // if (res.status === 400) {
@@ -62,3 +61,17 @@ async function isLoggedIn() {
             }
         }
 }
+
+
+
+let signUpButton = document.querySelector('#signUpBtn');
+
+signUpButton.addEventListener('click', async () => {
+
+    window.location.href = 'sign-up.html';
+
+});
+
+
+
+

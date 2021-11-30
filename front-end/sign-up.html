@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reimbursement System</title>
+    <link rel="stylesheet" href="https://bulma.io/vendor/fontawesome-free-5.15.2-web/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel = "stylesheet" href = "index.css">
+</head>
+<body>
+    <section class="hero is-primary is-fullheight" style = "background-color: #1c1c1c;">
+        <div class="hero-body">
+            <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-two-fifths">
+                    <div class = "box" style = "background-color: #e3e3e3ab;">
+
+                        <div class = "box label" style = "text-align: center; background-color: #e3e3e3ab;">
+                            Hello User. Signing up made easy!
+                        </div>
+
+                        <div class="field is-horizontal">
+                            <div class = "field-body">
+                                <div class="field">
+                                    <label class="label" >First Name</label>
+                                        <div class="control has-icons-left">
+                                            <input id = "firstName" type="text" placeholder = "John" style = "background-color: #e3e3e3ab;"
+                                            class="input is-info" required>
+                                                <span class="icon is-small is-left">
+                                                <i class="fas fa-user"></i>
+                                                </span>
+                                        </div>
+                                </div>
+                                <div class="field">
+                                    <label class="label" >Last Name</label>
+                                        <input id = "lastName" type="text" placeholder = "Doe" style = "background-color: #e3e3e3ab;"
+                                        class="input is-info" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field is-horizontal">
+                            <div class = "field-body">
+                                <div class="field">
+                                    <label class="label" >E-mail</label>
+                                        <div class = "control has-icons-left">
+                                            <input id = "emailAddress" type="email" placeholder="e.g. john.doe@example.com"
+                                            style = "background-color: #e3e3e3ab;" class="input is-info" required>
+                                                <span class="icon is-small is-left">
+                                                <i class="fas fa-envelope"></i>
+                                                </span>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field is-horizontal">
+                            <div class = "field-body">
+                                <div class="field">
+                                    <label class="label" >Usermame</label>
+                                    <input id = "usernameModal" type="text" placeholder="e.g. johnwick123" style = "background-color: #e3e3e3ab;" class="input is-info" required>
+                                </div>
+                                <div class="field">
+                                    <label  class="label" >Password</label>
+                                    <input id = "passwordModal" type="password" placeholder= "Password" style = "background-color: #e3e3e3ab;" class="input is-info" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field is-horizontal">
+                            <div class="field-body">
+                                <div class="field is-narrow">
+                                    <div class="control">
+                                        <label class="label" >Role</label>
+                                            <div class="select is-fullwidth is-info" >
+                                                <select style = "background-color: #e3e3e3ab;">
+                                                <option>Finance Manager</option>
+                                                <option>Employee</option>
+                                                </select>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field is-horizontal my-container">
+                            <button class="button is-success" id = "signUpBtnForReal">
+                            Sign up
+                            </button>
+                            <button class="button is-success" id = "goBack">
+                            Already have an account?
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<script src = "sign-up.js"></script>
+</body>
+</html>
