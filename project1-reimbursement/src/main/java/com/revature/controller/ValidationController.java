@@ -15,6 +15,7 @@ import io.javalin.http.Handler;
 public class ValidationController implements MapEndpoints{
 	
 	UsersService userService;
+	private final String validatedUser = "validateduser";
 	
 	public ValidationController () {
 		this.userService = new UsersService();
@@ -28,7 +29,7 @@ public class ValidationController implements MapEndpoints{
 		HttpServletRequest req = ctx.req;
 		HttpSession session = req.getSession();
 		
-		session.setAttribute("validateduser", user);
+		session.setAttribute(validatedUser, user);
 			
 		ctx.json(user);
 		
@@ -43,8 +44,8 @@ public class ValidationController implements MapEndpoints{
 	private Handler checkLoginStatus = (ctx) -> {
 		HttpSession session = ctx.req.getSession();
 		
-		if (!(session.getAttribute("validateduser") == null)) {
-			ctx.json(session.getAttribute("validateduser"));
+		if (!(session.getAttribute(validatedUser) == null)) {
+			ctx.json(session.getAttribute(validatedUser));
 			ctx.status(200);
 		} else {
 			ctx.json(new ExceptionMessageDTO("User is not logged in"));

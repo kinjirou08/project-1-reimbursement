@@ -20,6 +20,7 @@ public class UsersController implements MapEndpoints {
 
 	UsersService userService;
 	AuthorizationService authService;
+	private final String validatedUser = "validateduser";
 
 	public UsersController() {
 		this.userService = new UsersService();
@@ -28,7 +29,7 @@ public class UsersController implements MapEndpoints {
 
 	public Handler addReimbursement = (ctx) -> {
 
-		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
+		Users user = (Users) ctx.req.getSession().getAttribute(validatedUser);
 		this.authService.authorizeEmployeeandFinanceManager(user);
 
 		//AddReimbursementDTO addDto = ctx.bodyAsClass(AddReimbursementDTO.class);
@@ -59,7 +60,7 @@ public class UsersController implements MapEndpoints {
 
 	public Handler getAllReimbursement = (ctx) -> {
 
-		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
+		Users user = (Users) ctx.req.getSession().getAttribute(validatedUser);
 		this.authService.authorizeFinanceManager(user);
 
 		String reimbStatus = ctx.queryParam("reimbStatus");
@@ -80,7 +81,7 @@ public class UsersController implements MapEndpoints {
 
 	public Handler getAllReimbursementById = (ctx) -> {
 
-		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
+		Users user = (Users) ctx.req.getSession().getAttribute(validatedUser);
 		this.authService.authorizeEmployee(user);
 		
 
@@ -91,7 +92,7 @@ public class UsersController implements MapEndpoints {
 
 	public Handler editReimbursement = (ctx) -> {
 
-		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
+		Users user = (Users) ctx.req.getSession().getAttribute(validatedUser);
 		this.authService.authorizeFinanceManager(user);
 
 		String reimbId = ctx.pathParam("reimb_id");
@@ -104,7 +105,7 @@ public class UsersController implements MapEndpoints {
 	};
 	private Handler getReceiptFromReimbursementById = (ctx) -> {
 		// protect endpoint
-		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
+		Users user = (Users) ctx.req.getSession().getAttribute(validatedUser);
 		this.authService.authorizeFinanceManager(user);
 
 		String reimbId = ctx.pathParam("id");
@@ -120,7 +121,7 @@ public class UsersController implements MapEndpoints {
 	
 	private Handler geCustomerReceiptFromReimbursementById = (ctx) -> {
 		// protect endpoint
-		Users user = (Users) ctx.req.getSession().getAttribute("validateduser");
+		Users user = (Users) ctx.req.getSession().getAttribute(validatedUser);
 		this.authService.authorizeEmployeeandFinanceManager(user);
 
 		String reimbId = ctx.pathParam("id");
