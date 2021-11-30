@@ -31,8 +31,6 @@ public class UsersController implements MapEndpoints {
 
 		Users user = (Users) ctx.req.getSession().getAttribute(validatedUser);
 		this.authService.authorizeEmployeeandFinanceManager(user);
-
-		//AddReimbursementDTO addDto = ctx.bodyAsClass(AddReimbursementDTO.class);
 		
 		String reimbAmount = ctx.formParam("reimbAmount");
 		String reimbType = ctx.formParam("reimbType");
@@ -126,7 +124,7 @@ public class UsersController implements MapEndpoints {
 
 		String reimbId = ctx.pathParam("id");
 
-		InputStream receipt = this.userService.getCustomerReceiptFromReimbursementById(user, reimbId);
+		InputStream receipt = this.userService.getCustomerReceiptFromReimbursementById(reimbId);
 
 		Tika tika = new Tika();
 		String mimeType = tika.detect(receipt);

@@ -8,11 +8,10 @@ import org.postgresql.Driver;
 
 public class JDBCUtility {
 
-//	private static final String server = "localhost";
-//	private static final String url = "jdbc:postgresql://" + server + "/Reimbursement";
-//	private static final String username = "postgres";
-//	private static final String password = "p4ssw0rd";
-
+	private JDBCUtility() {
+		throw new IllegalStateException("Utility class");
+	}
+	
 	public static Connection getConnection() throws SQLException {
 
 		String url = System.getenv("db_url");

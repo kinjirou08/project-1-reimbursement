@@ -8,7 +8,6 @@ public class AddReimbursementDTO {
 	private String reimbSubmitted;
 	private String reimbType;
 	private String reimbDescription;
-	//private int reimbAuthor;
 	
 	public AddReimbursementDTO() {
 		super();
@@ -20,7 +19,6 @@ public class AddReimbursementDTO {
 		this.reimbSubmitted = reimbSubmitted;
 		this.reimbType = reimbType;
 		this.reimbDescription = reimbDescription;
-		//this.reimbAuthor = reimbAuthor;
 	}
 
 	public double getReimbAmount() {
@@ -82,38 +80,4 @@ public class AddReimbursementDTO {
 
 	
 }
-//	public int getReimbAuthor() {
-//		return reimbAuthor;
-//	}
-//
-//	public void setReimbAuthor(int reimbAuthor) {
-//		this.reimbAuthor = reimbAuthor;
-//	}
-
-//	@Override
-//	public int hashCode() {
-//		return Objects.hash(reimbAmount, reimbAuthor, reimbDescription, reimbSubmitted, reimbType);
-//	}
-//
-//	@Override
-//	public boolean equals(Object obj) {
-//		if (this == obj)
-//			return true;
-//		if (obj == null)
-//			return false;
-//		if (getClass() != obj.getClass())
-//			return false;
-//		AddReimbursementDTO other = (AddReimbursementDTO) obj;
-//		return Double.doubleToLongBits(reimbAmount) == Double.doubleToLongBits(other.reimbAmount)
-//				&& reimbAuthor == other.reimbAuthor && Objects.equals(reimbDescription, other.reimbDescription)
-//				&& Objects.equals(reimbSubmitted, other.reimbSubmitted) && Objects.equals(reimbType, other.reimbType);
-//	}
-//
-//	@Override
-//	public String toString() {
-//		return "AddReimbursementDTO [reimbAmount=" + reimbAmount + ", reimbSubmitted=" + reimbSubmitted + ", reimbType="
-//				+ reimbType + ", reimbDescription=" + reimbDescription + ", reimbAuthor=" + reimbAuthor + "]";
-//	}
-
-	
 

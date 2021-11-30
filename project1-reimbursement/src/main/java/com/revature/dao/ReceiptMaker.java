@@ -12,6 +12,10 @@ import java.io.Writer;
 import com.revature.models.Reimbursement;
 
 public class ReceiptMaker {
+	
+	private ReceiptMaker() {
+		throw new IllegalStateException("Utility class");
+	}
 
 	public static InputStream makeReceipt(Reimbursement info) throws IOException {
 

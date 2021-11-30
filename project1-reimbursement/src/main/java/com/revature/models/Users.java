@@ -14,13 +14,23 @@ public class Users {
 	
 	public Users() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Users(int ersUserId, String ersUsername, String ersPassword, String ersFirstName, String ersLastName,
 			String ersEmail, String ersRole) {
 		super();
 		this.ersUserId = ersUserId;
+		this.ersUsername = ersUsername;
+		this.ersPassword = ersPassword;
+		this.ersFirstName = ersFirstName;
+		this.ersLastName = ersLastName;
+		this.ersEmail = ersEmail;
+		this.ersRole = ersRole;
+	}
+	
+	public Users(String ersUsername, String ersPassword, String ersFirstName, String ersLastName, String ersEmail,
+			String ersRole) {
+		super();
 		this.ersUsername = ersUsername;
 		this.ersPassword = ersPassword;
 		this.ersFirstName = ersFirstName;

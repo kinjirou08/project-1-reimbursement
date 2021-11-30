@@ -5,7 +5,6 @@ import javax.servlet.http.HttpSession;
 
 import com.revature.dto.ExceptionMessageDTO;
 import com.revature.dto.LoginCredentialsDTO;
-import com.revature.dto.NewUsersDTO;
 import com.revature.models.Users;
 import com.revature.services.UsersService;
 
@@ -23,8 +22,8 @@ public class ValidationController implements MapEndpoints{
 	
 	private Handler login = (ctx) -> {
 	
-		LoginCredentialsDTO login = ctx.bodyAsClass(LoginCredentialsDTO.class);		
-		Users user = this.userService.getUserByUsernameAndPassword(login.getErsUsername(), login.getErsPassword());
+		LoginCredentialsDTO loginCred = ctx.bodyAsClass(LoginCredentialsDTO.class);		
+		Users user = this.userService.getUserByUsernameAndPassword(loginCred.getErsUsername(), loginCred.getErsPassword());
 		
 		HttpServletRequest req = ctx.req;
 		HttpSession session = req.getSession();
@@ -55,7 +54,7 @@ public class ValidationController implements MapEndpoints{
 	
 	public Handler signup = (ctx) -> {
 		
-		NewUsersDTO newUser = ctx.bodyAsClass(NewUsersDTO.class);
+		Users newUser = ctx.bodyAsClass(Users.class);
 		
 		Users user = this.userService.newUser(newUser);
 		

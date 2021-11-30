@@ -8,14 +8,17 @@ import java.security.spec.InvalidKeySpecException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import com.revature.dto.NewUsersDTO;
+import com.revature.models.Users;
 
 public class PasswordHashing {
 
-	public static String generateHashedPassword(NewUsersDTO newUser) throws NoSuchAlgorithmException, InvalidKeySpecException {
+	private PasswordHashing() {
+		 throw new IllegalStateException("Utility class");
+	}
+	
+	public static String generateHashedPassword(Users newUser) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
 		String generatedSecuredPasswordHash = generateStorngPasswordHash(newUser.getErsPassword());
-		System.out.println(generatedSecuredPasswordHash);
 
 		return generatedSecuredPasswordHash;
 	}

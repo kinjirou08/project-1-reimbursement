@@ -10,7 +10,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revature.dto.NewUsersDTO;
 import com.revature.models.Reimbursement;
 import com.revature.models.Users;
 import com.revature.util.JDBCUtility;
@@ -178,7 +177,7 @@ public class UsersDAO {
 
 			InputStream receipt = ReceiptMaker.makeReceipt(getReimbursementById);
 
-			updateReceipt(reimbId, getReimbursementById, receipt);
+			updateReceipt(reimbId, receipt);
 
 			return new Reimbursement(reimbId, getReimbursementById.getReimbAmount(),
 					getReimbursementById.getReimbSubmitted(), getReimbursementById.getReimbResolved(), reimbStatus,
@@ -187,7 +186,7 @@ public class UsersDAO {
 		}
 	}
 
-	private void updateReceipt(int rId, Reimbursement getReimbursementById, InputStream receipt)
+	private void updateReceipt(int rId, InputStream receipt)
 			throws SQLException, IOException {
 		try (Connection con = JDBCUtility.getConnection()) {
 			String sql = "UPDATE ers_reimbursement\r\n" + "SET reimb_receipt = ?\r\n" + "WHERE reimb_id = ?;";
@@ -201,13 +200,14 @@ public class UsersDAO {
 
 	}
 
-	public InputStream selectReceiptFromReimbursementById(int id) throws SQLException {
+	public InputStream selectReceiptFromReimbursementById(int reimbId, int resolverId) throws SQLException {
 		try (Connection con = JDBCUtility.getConnection()) {
-			String sql = "SELECT reimb_receipt FROM ers_reimbursement WHERE reimb_id = ?";
+			String sql = "SELECT reimb_receipt FROM ers_reimbursement WHERE reimb_id = ? AND fk_reimb_resolver = ?";
 
 			PreparedStatement ps = con.prepareStatement(sql);
 
-			ps.setInt(1, id);
+			ps.setInt(1, reimbId);
+			ps.setInt(2, resolverId);
 
 			ResultSet rs = ps.executeQuery();
 
@@ -241,7 +241,7 @@ public class UsersDAO {
 		}
 	}
 
-	public Users insertNewUser(NewUsersDTO newUser) throws SQLException {
+	public Users insertNewUser(Users newUser) throws SQLException {
 
 		try (Connection con = JDBCUtility.getConnection()) {
 			String sql = "INSERT INTO ers_users (ers_username, ers_password, user_first_name, user_last_name, user_email, user_role) "
