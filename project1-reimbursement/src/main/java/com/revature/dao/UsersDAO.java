@@ -15,13 +15,15 @@ import com.revature.models.Users;
 import com.revature.util.JDBCUtility;
 
 public class UsersDAO {
+	
+	PreparedStatement ps = null;
 
 	public Users selectUserByUsernameAndPassword(String ers_username, String ers_password) throws SQLException {
 
 		try (Connection con = JDBCUtility.getConnection()) {
 
 			String sql = "SELECT * FROM ers_users WHERE ers_username = ? AND ers_password = crypt(?,ers_password)";
-			PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			ps.setString(1, ers_username);
 			ps.setString(2, ers_password);
@@ -35,6 +37,9 @@ public class UsersDAO {
 			} else {
 				return null;
 			}
+			
+		} finally {
+			ps.close();
 		}
 
 	}
@@ -47,7 +52,7 @@ public class UsersDAO {
 					+ "reimb_description, reimb_customer_receipt, fk_reimb_author)\r\n"
 					+ "VALUES\r\n"
 					+ "(?, now(), ?, ?, ?, ?);";
-			PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			ps.setDouble(1, reimbAmount);
 			ps.setString(2, reimbType);
@@ -65,6 +70,8 @@ public class UsersDAO {
 			return new Reimbursement(autoGenKeys, rs.getDouble("reimb_amount"), rs.getString("reimb_submitted"),
 					rs.getString("reimb_resolved"), rs.getString("reimb_status"), rs.getString("reimb_type"),
 					rs.getString("reimb_description"), usersId, 0);
+		} finally {
+			ps.close();
 		}
 
 	}
@@ -76,7 +83,7 @@ public class UsersDAO {
 		try (Connection con = JDBCUtility.getConnection()) {
 
 			String sql = "SELECT * FROM ers_reimbursement ORDER BY reimb_id;";
-			PreparedStatement ps = con.prepareStatement(sql);
+			ps = con.prepareStatement(sql);
 
 			ResultSet rs = ps.executeQuery();
 
@@ -86,6 +93,8 @@ public class UsersDAO {
 						rs.getString("reimb_type"), rs.getString("reimb_description"), rs.getInt("fk_reimb_author"),
 						rs.getInt("fk_reimb_resolver")));
 			}
+		} finally {
+			ps.close();
 		}
 		return listOfReimbursements;
 	}
@@ -93,12 +102,11 @@ public class UsersDAO {
 	public List<Reimbursement> selectAllReimbursementsByStatus(String reimbStatus) throws SQLException {
 		
 		List<Reimbursement> listOfReimbursements = new ArrayList<>();
-
-		
+	
 		try (Connection con = JDBCUtility.getConnection()) {
 
 			String sql = "SELECT * FROM ers_reimbursement WHERE reimb_status = ? ORDER BY reimb_id;";
-			PreparedStatement ps = con.prepareStatement(sql);
+			ps = con.prepareStatement(sql);
 			
 			ps.setString(1, reimbStatus);
 
@@ -110,6 +118,8 @@ public class UsersDAO {
 						rs.getString("reimb_type"), rs.getString("reimb_description"), rs.getInt("fk_reimb_author"),
 						rs.getInt("fk_reimb_resolver")));
 			}
+		} finally {
+			ps.close();
 		}
 		return listOfReimbursements;
 	}
@@ -121,7 +131,7 @@ public class UsersDAO {
 		try (Connection con = JDBCUtility.getConnection()) {
 
 			String sql = "SELECT * FROM ers_reimbursement WHERE fk_reimb_author = ? ORDER BY reimb_id;";
-			PreparedStatement ps = con.prepareStatement(sql);
+			ps = con.prepareStatement(sql);
 
 			ps.setInt(1, id);
 
@@ -133,6 +143,8 @@ public class UsersDAO {
 						rs.getString("reimb_type"), rs.getString("reimb_description"), rs.getInt("fk_reimb_author"),
 						rs.getInt("fk_reimb_resolver")));
 			}
+		} finally {
+			ps.close();
 		}
 		return listOfReimbursements;
 	}
@@ -141,7 +153,7 @@ public class UsersDAO {
 
 		try (Connection con = JDBCUtility.getConnection()) {
 			String sql = "SELECT * FROM ers_reimbursement WHERE reimb_id = ? ORDER BY reimb_id;";
-			PreparedStatement ps = con.prepareStatement(sql);
+			ps = con.prepareStatement(sql);
 
 			ps.setInt(1, rId);
 
@@ -155,6 +167,8 @@ public class UsersDAO {
 			} else {
 				return null;
 			}
+		} finally {
+			ps.close();
 		}
 	}
 
@@ -165,7 +179,7 @@ public class UsersDAO {
 
 			String sql = "UPDATE ers_reimbursement\r\n"
 					+ "SET reimb_resolved = now(), fk_reimb_resolver = ?, reimb_status = ?\r\n" + "WHERE reimb_id = ?;";
-			PreparedStatement ps = con.prepareStatement(sql);
+			ps = con.prepareStatement(sql);
 
 			ps.setInt(1, reimbAuthor);
 			ps.setString(2, reimbStatus);
@@ -183,6 +197,9 @@ public class UsersDAO {
 					getReimbursementById.getReimbSubmitted(), getReimbursementById.getReimbResolved(), reimbStatus,
 					getReimbursementById.getReimbType(), getReimbursementById.getReimbDescription(),
 					getReimbursementById.getReimbAuthor(), reimbAuthor);
+			
+		} finally {
+			ps.close();
 		}
 	}
 
@@ -190,12 +207,14 @@ public class UsersDAO {
 			throws SQLException, IOException {
 		try (Connection con = JDBCUtility.getConnection()) {
 			String sql = "UPDATE ers_reimbursement\r\n" + "SET reimb_receipt = ?\r\n" + "WHERE reimb_id = ?;";
-			PreparedStatement ps = con.prepareStatement(sql);
+			ps = con.prepareStatement(sql);
 
 			ps.setBinaryStream(1, receipt);
 			ps.setInt(2, rId);
 
 			ps.executeUpdate();
+		} finally {
+			ps.close();
 		}
 
 	}
@@ -204,7 +223,7 @@ public class UsersDAO {
 		try (Connection con = JDBCUtility.getConnection()) {
 			String sql = "SELECT reimb_receipt FROM ers_reimbursement WHERE reimb_id = ? AND fk_reimb_resolver = ?";
 
-			PreparedStatement ps = con.prepareStatement(sql);
+			ps = con.prepareStatement(sql);
 
 			ps.setInt(1, reimbId);
 			ps.setInt(2, resolverId);
@@ -213,11 +232,13 @@ public class UsersDAO {
 
 			if (rs.next()) {
 				InputStream image = rs.getBinaryStream("reimb_receipt");
-
 				return image;
 			}
 
 			return null;
+			
+		} finally {
+			ps.close();
 		}
 	}
 	
@@ -225,7 +246,7 @@ public class UsersDAO {
 		try (Connection con = JDBCUtility.getConnection()) {
 			String sql = "SELECT reimb_customer_receipt FROM ers_reimbursement WHERE reimb_id = ?";
 
-			PreparedStatement ps = con.prepareStatement(sql);
+			ps = con.prepareStatement(sql);
 
 			ps.setInt(1, id);
 
@@ -238,6 +259,8 @@ public class UsersDAO {
 			}
 
 			return null;
+		} finally {
+			ps.close();
 		}
 	}
 
@@ -246,7 +269,7 @@ public class UsersDAO {
 		try (Connection con = JDBCUtility.getConnection()) {
 			String sql = "INSERT INTO ers_users (ers_username, ers_password, user_first_name, user_last_name, user_email, user_role) "
 					+ "VALUES (?,crypt(?, gen_salt('bf')),?,?,?,?);";
-			PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			ps.setString(1, newUser.getErsUsername());
 			ps.setString(2, newUser.getErsPassword());
@@ -274,6 +297,8 @@ public class UsersDAO {
 					rs.getString("user_role"));
 		} catch (SQLException e) {
 			throw new SQLException("Username already exists!");
+		} finally {
+			ps.close();
 		}
 
 	}
