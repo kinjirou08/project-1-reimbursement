@@ -48,10 +48,8 @@ public class ReceiptMaker {
 			writer.write("Reimbursement Resolver:" + info.getReimbResolver());
 
 			writer.flush();
-			//writer.close();
 
 			File initialFile = new File("d:/test.txt");
-			//InputStream targetStream = new FileInputStream(initialFile);
 
 			return new FileInputStream(initialFile);
 		}
