@@ -62,13 +62,12 @@ public class UsersService {
 		if (getReimbursementById.getReimbAuthor() == reimbAuthor) {
 			throw new UnauthorizedException("Cannot approve/reject your own Reimbursement request!");
 		}
-		
+
 		if (getReimbursementById.getReimbResolver() != 0) {
 			throw new UnauthorizedException("This request has already been Approved/Rejected!");
 		}
-		
-		return this.userDao.updateReimbursement(reimbAuthor, rId, getReimbursementById,
-				reimbStatus);
+
+		return this.userDao.updateReimbursement(reimbAuthor, rId, getReimbursementById, reimbStatus);
 
 	}
 
@@ -82,7 +81,7 @@ public class UsersService {
 		InputStream receipt = this.userDao.selectReceiptFromReimbursementById(id, currentlyLoggedInUser.getErsUserId());
 
 		if (currentlyLoggedInUser.getErsUserId() != checkResolverId.getReimbResolver()) {
-			throw new UnauthorizedException ("This Receipt belongs to another Finance Manager!");
+			throw new UnauthorizedException("This Receipt belongs to another Finance Manager!");
 		}
 
 		if (receipt == null) {
@@ -92,9 +91,27 @@ public class UsersService {
 		return receipt;
 	}
 
-	public InputStream getCustomerReceiptFromReimbursementById(String reimbId) throws SQLException {
+	public InputStream getCustomerReceiptFromReimbursementById(Users user, String reimbId) throws SQLException, UnauthorizedException {
 
-		int id = Integer.parseInt(reimbId);
+		try {
+			
+			int id = Integer.parseInt(reimbId);
+			
+			if (user.getErsRole().equals("Employee") || user.getErsRole().equals("Finance Manager")) {
+				
+				int userId = user.getErsUserId();
+				
+				List<Reimbursement> reimbursementsThatBelongsToEmployee = this.userDao.selectAllReimbursementsById(userId);
+				Set<Integer> reimbursementIdsEncountered = new HashSet<>();
+				for (Reimbursement r : reimbursementsThatBelongsToEmployee) {
+					reimbursementIdsEncountered.add(r.getReimbId());
+				}
+				
+				if (!reimbursementIdsEncountered.contains(id)) {
+					throw new UnauthorizedException("You cannot access the images of reimbursements that do not belong to yourself");
+				}
+			}
+		
 
 		InputStream receipt = this.userDao.selectCustomerReceiptFromReimbursementById(id);
 
@@ -103,10 +120,13 @@ public class UsersService {
 		}
 
 		return receipt;
+		
+		} catch (NumberFormatException e) {
+			throw new InvalidParameterException("Reimbursement id supplied must be an int");
+		}
 	}
 
-	public Users newUser(Users newUser)
-			throws SQLException {
+	public Users newUser(Users newUser) throws SQLException {
 
 		if (newUser.getErsFirstName().trim().equals("")) {
 			throw new InvalidParameterException("First Name field must not be empty!");
@@ -138,7 +158,6 @@ public class UsersService {
 
 		return this.userDao.insertNewUser(newUser);
 
-		
 	}
 
 	public List<Reimbursement> getAllReimbursementByStatus(String reimbStatus) throws SQLException {
@@ -187,10 +206,8 @@ public class UsersService {
 		int reimbAuthor = user.getErsUserId();
 		double amount = Double.parseDouble(reimbAmount);
 
-		return this.userDao.insertNewReimbursement(reimbAuthor, amount, reimbType,
-				reimbDescription, content);
+		return this.userDao.insertNewReimbursement(reimbAuthor, amount, reimbType, reimbDescription, content);
 
-		
 	}
 
 }

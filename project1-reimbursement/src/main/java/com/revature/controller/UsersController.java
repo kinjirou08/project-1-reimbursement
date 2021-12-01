@@ -17,8 +17,8 @@ import io.javalin.http.UploadedFile;
 
 public class UsersController implements MapEndpoints {
 
-	private static UsersService userService;
-	private static AuthorizationService authService;
+	private UsersService userService;
+	private AuthorizationService authService;
 	private static final String VALIDATED_USER = "validateduser";
 
 	public UsersController() {
@@ -124,7 +124,7 @@ public class UsersController implements MapEndpoints {
 
 		String reimbId = ctx.pathParam("id");
 
-		InputStream receipt = userService.getCustomerReceiptFromReimbursementById(reimbId);
+		InputStream receipt = userService.getCustomerReceiptFromReimbursementById(user, reimbId);
 
 		Tika tika = new Tika();
 		String mimeType = tika.detect(receipt);
