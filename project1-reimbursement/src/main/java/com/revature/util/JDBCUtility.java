@@ -21,9 +21,8 @@ public class JDBCUtility {
 		Driver postgresDriver = new Driver();
 		DriverManager.registerDriver(postgresDriver);
 
-		Connection con = DriverManager.getConnection(url, username, password);
+		return DriverManager.getConnection(url, username, password);
 
-		return con;
 	}
 	
 }

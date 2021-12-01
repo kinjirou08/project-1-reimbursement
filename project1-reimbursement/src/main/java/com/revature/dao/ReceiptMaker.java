@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
 import com.revature.models.Reimbursement;
 
@@ -21,7 +22,7 @@ public class ReceiptMaker {
 
 		int bufferSize = 8 * 1024;
 
-		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("d:/test.txt"), "UTF-8"),
+		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("d:/test.txt"), StandardCharsets.UTF_8),
 				bufferSize)) {
 			
 			writer.write("Reimbursement Author:" + info.getReimbAuthor());
@@ -47,12 +48,12 @@ public class ReceiptMaker {
 			writer.write("Reimbursement Resolver:" + info.getReimbResolver());
 
 			writer.flush();
-			writer.close();
+			//writer.close();
 
 			File initialFile = new File("d:/test.txt");
-			InputStream targetStream = new FileInputStream(initialFile);
+			//InputStream targetStream = new FileInputStream(initialFile);
 
-			return targetStream;
+			return new FileInputStream(initialFile);
 		}
 	}
 }

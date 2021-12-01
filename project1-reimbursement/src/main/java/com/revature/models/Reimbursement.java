@@ -1,6 +1,5 @@
 package com.revature.models;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 public class Reimbursement {
@@ -12,13 +11,11 @@ public class Reimbursement {
 	private String reimbStatus; // Default = "Pending" -- other options: "Approved" AND "Rejected"
 	private String reimbType; // Food, Lodging, Travel, Other
 	private String reimbDescription;
-	//private byte[] reimbReceipt; 
 	private int reimbAuthor;
 	private int reimbResolver;
 	
 	public Reimbursement() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Reimbursement(int reimbId, double reimbAmount, String reimbSubmitted, String reimbResolved,
@@ -32,7 +29,6 @@ public class Reimbursement {
 		this.reimbStatus = reimbStatus;
 		this.reimbType = reimbType;
 		this.reimbDescription = reimbDescription;
-		//this.reimbReceipt = reimbReceipt;
 		this.reimbAuthor = reimbAuthor;
 		this.reimbResolver = reimbResolver;
 	}
@@ -92,14 +88,6 @@ public class Reimbursement {
 	public void setReimbDescription(String reimbDescription) {
 		this.reimbDescription = reimbDescription;
 	}
-
-//	public byte[] getReimbReceipt() {
-//		return reimbReceipt;
-//	}
-//
-//	public void setReimbReceipt(byte[] reimbReceipt) {
-//		this.reimbReceipt = reimbReceipt;
-//	}
 
 	public int getReimbAuthor() {
 		return reimbAuthor;

@@ -6,14 +6,14 @@ import com.revature.controller.UsersController;
 import com.revature.controller.ValidationController;
 
 import io.javalin.Javalin;
+import io.javalin.core.JavalinConfig;
 
 public class MainDriver {
 
 	public static void main(String[] args) {
 
-		Javalin app = Javalin.create((config) -> {
-			config.enableCorsForAllOrigins();
-		});
+		Javalin app = Javalin.create(JavalinConfig::enableCorsForAllOrigins);
+		
 
 		mapControllers(app, new ValidationController(), new UsersController());
 

@@ -11,7 +11,6 @@ public class UpdateReimbursementDTO {
 	
 	public UpdateReimbursementDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public UpdateReimbursementDTO(int reimbId, String reimbResolved, String reimbStatus, int reimbResolver) {

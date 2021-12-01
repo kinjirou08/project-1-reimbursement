@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.tika.Tika;
 
 import com.revature.dto.ExceptionMessageDTO;
-import com.revature.exceptions.ReimbursementNotFoundExcpetion;
 import com.revature.models.Reimbursement;
 import com.revature.models.Users;
 import com.revature.services.AuthorizationService;
@@ -18,19 +17,19 @@ import io.javalin.http.UploadedFile;
 
 public class UsersController implements MapEndpoints {
 
-	UsersService userService;
-	AuthorizationService authService;
-	private final String validatedUser = "validateduser";
+	private static UsersService userService;
+	private static AuthorizationService authService;
+	private final static String validatedUser = "validateduser";
 
 	public UsersController() {
-		this.userService = new UsersService();
-		this.authService = new AuthorizationService();
+		UsersController.userService = new UsersService();
+		UsersController.authService = new AuthorizationService();
 	}
 
-	public Handler addReimbursement = (ctx) -> {
+	private Handler addReimbursement = ctx -> {
 
 		Users user = (Users) ctx.req.getSession().getAttribute(validatedUser);
-		this.authService.authorizeEmployeeandFinanceManager(user);
+		authService.authorizeEmployeeandFinanceManager(user);
 		
 		String reimbAmount = ctx.formParam("reimbAmount");
 		String reimbType = ctx.formParam("reimbType");
@@ -50,65 +49,66 @@ public class UsersController implements MapEndpoints {
 		
 		String mimeType = tika.detect(content);
 
-		Reimbursement newReimbursement = this.userService.newReimbursement(user, reimbAmount, reimbType, reimbDescription, mimeType, content);
+		Reimbursement newReimbursement = userService.newReimbursement(user, reimbAmount, reimbType, reimbDescription, mimeType, content);
 
 		ctx.json(newReimbursement);
+		ctx.status(201);
 
 	};
 
-	public Handler getAllReimbursement = (ctx) -> {
+	private Handler getAllReimbursement = ctx -> {
 
 		Users user = (Users) ctx.req.getSession().getAttribute(validatedUser);
-		this.authService.authorizeFinanceManager(user);
+		authService.authorizeFinanceManager(user);
 
 		String reimbStatus = ctx.queryParam("reimbStatus");
 
 		if (reimbStatus == null) {
-			List<Reimbursement> listOfReimbursements = this.userService.getAllReimbursement();
+			List<Reimbursement> listOfReimbursements = userService.getAllReimbursement();
 			if(listOfReimbursements.isEmpty()) {
 				ctx.result("There is nothing to show here!");
 			} else {
 				ctx.json(listOfReimbursements);
 			}
 		} else {
-			List<Reimbursement> listOfReimbursements = this.userService.getAllReimbursementByStatus(reimbStatus);
+			List<Reimbursement> listOfReimbursements = userService.getAllReimbursementByStatus(reimbStatus);
 			ctx.json(listOfReimbursements);
 		}
 
 	};
 
-	public Handler getAllReimbursementById = (ctx) -> {
+	private Handler getAllReimbursementById = ctx -> {
 
 		Users user = (Users) ctx.req.getSession().getAttribute(validatedUser);
-		this.authService.authorizeEmployee(user);
+		authService.authorizeEmployee(user);
 		
 
-		List<Reimbursement> listOfReimbursements = this.userService.getAllReimbursementById(user);
+		List<Reimbursement> listOfReimbursements = userService.getAllReimbursementById(user);
 
 		ctx.json(listOfReimbursements);
 	};
 
-	public Handler editReimbursement = (ctx) -> {
+	private Handler editReimbursement = ctx -> {
 
 		Users user = (Users) ctx.req.getSession().getAttribute(validatedUser);
-		this.authService.authorizeFinanceManager(user);
+		authService.authorizeFinanceManager(user);
 
 		String reimbId = ctx.pathParam("reimb_id");
 		String reimbStatus = ctx.formParam("reimbStatus");
 
-		Reimbursement reimbToBeUpdated = this.userService.editReimbursement(user, reimbId, reimbStatus);
+		Reimbursement reimbToBeUpdated = userService.editReimbursement(user, reimbId, reimbStatus);
 
 		ctx.json(reimbToBeUpdated);
 
 	};
-	private Handler getReceiptFromReimbursementById = (ctx) -> {
+	private Handler getReceiptFromReimbursementById = ctx -> {
 		// protect endpoint
 		Users user = (Users) ctx.req.getSession().getAttribute(validatedUser);
-		this.authService.authorizeFinanceManager(user);
+		authService.authorizeFinanceManager(user);
 
 		String reimbId = ctx.pathParam("id");
 
-		InputStream receipt = this.userService.getReceiptFromReimbursementById(user, reimbId);
+		InputStream receipt = userService.getReceiptFromReimbursementById(user, reimbId);
 
 		Tika tika = new Tika();
 		String mimeType = tika.detect(receipt);
@@ -117,14 +117,14 @@ public class UsersController implements MapEndpoints {
 		ctx.result(receipt);
 	};
 	
-	private Handler geCustomerReceiptFromReimbursementById = (ctx) -> {
+	private Handler geCustomerReceiptFromReimbursementById = ctx -> {
 		// protect endpoint
 		Users user = (Users) ctx.req.getSession().getAttribute(validatedUser);
-		this.authService.authorizeEmployeeandFinanceManager(user);
+		authService.authorizeEmployeeandFinanceManager(user);
 
 		String reimbId = ctx.pathParam("id");
 
-		InputStream receipt = this.userService.getCustomerReceiptFromReimbursementById(reimbId);
+		InputStream receipt = userService.getCustomerReceiptFromReimbursementById(reimbId);
 
 		Tika tika = new Tika();
 		String mimeType = tika.detect(receipt);

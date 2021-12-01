@@ -14,13 +14,13 @@ import io.javalin.http.Handler;
 public class ValidationController implements MapEndpoints{
 	
 	UsersService userService;
-	private final String validatedUser = "validateduser";
+	private final static String validatedUser = "validateduser";
 	
 	public ValidationController () {
 		this.userService = new UsersService();
 	}
 	
-	private Handler login = (ctx) -> {
+	private Handler login = ctx -> {
 	
 		LoginCredentialsDTO loginCred = ctx.bodyAsClass(LoginCredentialsDTO.class);		
 		Users user = this.userService.getUserByUsernameAndPassword(loginCred.getErsUsername(), loginCred.getErsPassword());
@@ -34,16 +34,16 @@ public class ValidationController implements MapEndpoints{
 		
 	};	
 
-	private Handler logout = (ctx) -> {
+	private Handler logout = ctx -> {
 		HttpServletRequest req = ctx.req;
 		
 		req.getSession().invalidate();
 	};
 	
-	private Handler checkLoginStatus = (ctx) -> {
+	private Handler checkLoginStatus = ctx -> {
 		HttpSession session = ctx.req.getSession();
 		
-		if (!(session.getAttribute(validatedUser) == null)) {
+		if ((session.getAttribute(validatedUser) != null)) {
 			ctx.json(session.getAttribute(validatedUser));
 			ctx.status(200);
 		} else {
@@ -52,14 +52,14 @@ public class ValidationController implements MapEndpoints{
 		}
 	};
 	
-	public Handler signup = (ctx) -> {
+	private Handler signup = ctx -> {
 		
 		Users newUser = ctx.bodyAsClass(Users.class);
 		
 		Users user = this.userService.newUser(newUser);
 		
 		ctx.json(user);
-		
+		ctx.status(201);
 	};
 	
 	@Override

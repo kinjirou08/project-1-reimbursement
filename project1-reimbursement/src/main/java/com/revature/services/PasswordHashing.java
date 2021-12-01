@@ -18,9 +18,8 @@ public class PasswordHashing {
 	
 	public static String generateHashedPassword(Users newUser) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
-		String generatedSecuredPasswordHash = generateStorngPasswordHash(newUser.getErsPassword());
-
-		return generatedSecuredPasswordHash;
+		return generateStorngPasswordHash(newUser.getErsPassword());
+	
 	}
 
 	private static String generateStorngPasswordHash(String password)
@@ -43,7 +42,7 @@ public class PasswordHashing {
 		return salt;
 	}
 
-	private static String toHex(byte[] array) throws NoSuchAlgorithmException {
+	private static String toHex(byte[] array) {
 		BigInteger bi = new BigInteger(1, array);
 		String hex = bi.toString(16);
 

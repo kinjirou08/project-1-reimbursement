@@ -18,15 +18,15 @@ public class UsersDAO {
 	
 	PreparedStatement ps = null;
 
-	public Users selectUserByUsernameAndPassword(String ers_username, String ers_password) throws SQLException {
+	public Users selectUserByUsernameAndPassword(String erUsername, String ersPassword) throws SQLException {
 
 		try (Connection con = JDBCUtility.getConnection()) {
 
 			String sql = "SELECT * FROM ers_users WHERE ers_username = ? AND ers_password = crypt(?,ers_password)";
 			ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-			ps.setString(1, ers_username);
-			ps.setString(2, ers_password);
+			ps.setString(1, erUsername);
+			ps.setString(2, ersPassword);
 
 			ResultSet rs = ps.executeQuery();
 
@@ -204,7 +204,7 @@ public class UsersDAO {
 	}
 
 	private void updateReceipt(int rId, InputStream receipt)
-			throws SQLException, IOException {
+			throws SQLException {
 		try (Connection con = JDBCUtility.getConnection()) {
 			String sql = "UPDATE ers_reimbursement\r\n" + "SET reimb_receipt = ?\r\n" + "WHERE reimb_id = ?;";
 			ps = con.prepareStatement(sql);
@@ -231,10 +231,8 @@ public class UsersDAO {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				InputStream image = rs.getBinaryStream("reimb_receipt");
-				return image;
+				return rs.getBinaryStream("reimb_receipt");
 			}
-
 			return null;
 			
 		} finally {
@@ -253,12 +251,11 @@ public class UsersDAO {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				InputStream image = rs.getBinaryStream("reimb_customer_receipt");
+				return rs.getBinaryStream("reimb_customer_receipt");
 
-				return image;
 			}
-
 			return null;
+			
 		} finally {
 			ps.close();
 		}
@@ -286,13 +283,13 @@ public class UsersDAO {
 			int generatedId = rs.getInt(1);
 
 			int passwordLength = newUser.getErsPassword().length();
-			String convertToAsterisk = "";
+			StringBuilder convertToAsterisk = new StringBuilder();
 
 			for (int i = 0; i < passwordLength; i++) {
-				convertToAsterisk += "*";
+				convertToAsterisk.append("*");
 			}
 
-			return new Users(generatedId, rs.getString("ers_username"), convertToAsterisk,
+			return new Users(generatedId, rs.getString("ers_username"), convertToAsterisk.toString(),
 					rs.getString("user_first_name"), rs.getString("user_last_name"), rs.getString("user_email"),
 					rs.getString("user_role"));
 		} catch (SQLException e) {

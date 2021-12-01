@@ -44,11 +44,10 @@ public class UsersService {
 		return this.userDao.selectAllReimbursements();
 	}
 
-	public List<Reimbursement> getAllReimbursementById(Users user) throws SQLException, ReimbursementNotFoundExcpetion {
+	public List<Reimbursement> getAllReimbursementById(Users user) throws SQLException {
 
-		List<Reimbursement> listOfReimbursementById = this.userDao.selectAllReimbursementsById(user.getErsUserId());
+		return this.userDao.selectAllReimbursementsById(user.getErsUserId());
 
-		return listOfReimbursementById;
 	}
 
 	public Reimbursement editReimbursement(Users user, String reimbId, String reimbStatus)
@@ -71,9 +70,8 @@ public class UsersService {
 			throw new UnauthorizedException("This request has already been Approved/Rejected!");
 		}
 		
-		Reimbursement reimbToBeUpdated = this.userDao.updateReimbursement(reimbAuthor, rId, getReimbursementById,
+		return this.userDao.updateReimbursement(reimbAuthor, rId, getReimbursementById,
 				reimbStatus);
-		return reimbToBeUpdated;
 
 	}
 
@@ -111,7 +109,7 @@ public class UsersService {
 	}
 
 	public Users newUser(Users newUser)
-			throws NoSuchAlgorithmException, NoSuchProviderException, SQLException, InvalidKeySpecException {
+			throws SQLException {
 
 		if (newUser.getErsFirstName().trim().equals("")) {
 			throw new InvalidParameterException("First Name field must not be empty!");
@@ -141,9 +139,9 @@ public class UsersService {
 			throw new InvalidParameterException("Role must be of Finance Manager or Employee!");
 		}
 
-		Users insertNewUser = this.userDao.insertNewUser(newUser);
+		return this.userDao.insertNewUser(newUser);
 
-		return insertNewUser;
+		
 	}
 
 	public List<Reimbursement> getAllReimbursementByStatus(String reimbStatus) throws SQLException {
@@ -192,10 +190,10 @@ public class UsersService {
 		int reimbAuthor = user.getErsUserId();
 		double amount = Double.parseDouble(reimbAmount);
 
-		Reimbursement insertNewReimbursement = this.userDao.insertNewReimbursement(reimbAuthor, amount, reimbType,
+		return this.userDao.insertNewReimbursement(reimbAuthor, amount, reimbType,
 				reimbDescription, content);
 
-		return insertNewReimbursement;
+		
 	}
 
 }
