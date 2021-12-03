@@ -5,8 +5,6 @@ window.addEventListener('load', async () => {
         method: 'GET',
         credentials: 'include'
     });
-    // If the above request results in a 200 status code, that means we are actually logged in
-    // So we need to take the userRole information and determine where to redirect them to
     if (res.status === 200) {
         let userObj = await res.json();
 
@@ -101,7 +99,7 @@ async function populateTableWithReimbursements() {
             imageElement.setAttribute('src', `http://localhost:8080/reimbursements/${reimbursement.reimbId}/customerReceipt`);
             modalContentElement.appendChild(imageElement);
 
-            viewReceiptModal.classList.add('is-active'); // add a class to the modal element to have it display
+            viewReceiptModal.classList.add('is-active');
 
         });
 
@@ -174,8 +172,8 @@ async function addReimbursement () {
         body: formData
     });
 
-    if (res.status === 201) { // If we successfully added an assignment
-        populateTableWithReimbursements(); // Refresh the table of assignments
+    if (res.status === 201) {
+        populateTableWithReimbursements();
     }
 }
 

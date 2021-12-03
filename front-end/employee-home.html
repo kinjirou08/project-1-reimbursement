@@ -108,25 +108,11 @@
           <a class="navbar-item" id = "add-reimbursement">
             Add a Reimbursement
           </a>
-          <a class="navbar-item">
-            Elements
-          </a>
-          <a class="navbar-item">
-            Components
-          </a>
-          <!-- <hr class="navbar-divider">
-          <div class="navbar-item">
-            Version 0.9.3
-          </div> -->
         </div>
       </div>
     </div>
 
       <div id="navMenu" class="navbar-menu">
-        <!-- <div class="navbar-start is-centered">
-          <h4 class = "title is-4" style = "text-align: center; color: #e3e3e3ab;"> Welcome User!</h4>
-        </div> -->
-
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
@@ -139,54 +125,39 @@
   </nav>
 
   <section class="hero is-link is-fullheight-with-navbar">
+    <div class = "columns is-centered">
+      <div class = "column">
+        <div class="notification is-primary" style="padding-right: 24px;">
 
-      <div class = "columns is-centered">
-        <!-- <div class = "column">
-          <div class="container">
-            <div class="notification is-primary">
-
-              <div class = "box label" style = "text-align: center; background-color: #e3e3e3ab;">
-                Add A Reimbursement
-            </div>
-
-            </div>
+          <div class = "box label" style = "text-align: center; background-color: #e3e3e3ab;">
+          Reimbursement History
           </div>
-        </div> -->
 
-        <div class = "column">
-         <!-- <div class="container"> -->
-            <div class="notification is-primary" style="padding-right: 24px;">
-
-              <div class = "box label" style = "text-align: center; background-color: #e3e3e3ab;">
-                Reimbursement History
-            </div>
-
-            <div id="reimbursements">
-              <table id="reimbursement-table" class = "table is-bordered is-narrow" style = "background-color: #98ddd3;">
-                  <thead>
-                      <tr style = "text-align: center; ">
-                          <th>Reimbursement Id</th>
-                          <th>Reimbursement Amount</th>
-                          <th>Time of Reimbursement Request</th>
-                          <th>Time of Reimbursement Resolved</th>
-                          <th>Reimbursement Status</th>
-                          <th>Reimbursement Type</th>
-                          <th>Reason of Reimbursement</th>
-                          <th>Reimbursement Author (ID)</th>
-                          <th>Reimbursement Resolver (ID)</th>
-                          <th>Reimbursement Receipts</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-              </table>
-            </div>
-            </div>
+          <div id="reimbursements">
+            <table id="reimbursement-table" class = "table is-bordered is-narrow" style = "background-color: #98ddd3;">
+              <thead>
+                <tr style = "text-align: center; ">
+                  <th>Reimbursement Id</th>
+                  <th>Reimbursement Amount</th>
+                  <th>Time of Reimbursement Request</th>
+                  <th>Time of Reimbursement Resolved</th>
+                  <th>Reimbursement Status</th>
+                  <th>Reimbursement Type</th>
+                  <th>Reason of Reimbursement</th>
+                  <th>Reimbursement Author (ID)</th>
+                  <th>Reimbursement Resolver (ID)</th>
+                  <th>Reimbursement Receipts</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
           </div>
         </div>
+      </div>
     </div>
-  </section>
 
-    <script src = "employee.js"></script>
+  </section>
+<script src = "employee.js"></script>
 </body>
 </html>

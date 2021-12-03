@@ -21,19 +21,6 @@ async function signUp() {
     let selectUserRole = document.querySelector('#userRole');
     let value = selectUserRole.options[selectUserRole.selectedIndex].value;
 
-    // let formData = new FormData();
-
-    // formData.append('ersUsername', usernameInput.value);
-    // formData.append('ersPassword', passwordInput.value);
-    // formData.append('ersFirstName', firstNameInput.value);
-    // formData.append('ersLastName', lastNameInput.value);
-    // formData.append('ersEmail', emailAddressInput.value);
-    // formData.append('ersRole', value);
-
-    // for (var values of formData.values()) {
-    //     console.log(values);
-    // }
-
     let res = await fetch('http://localhost:8080/signup', {
         method: 'POST',
         credentials: 'include',
