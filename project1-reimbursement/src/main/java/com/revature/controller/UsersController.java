@@ -80,7 +80,7 @@ public class UsersController implements MapEndpoints {
 	private Handler getAllReimbursementById = ctx -> {
 
 		Users user = (Users) ctx.req.getSession().getAttribute(VALIDATED_USER);
-		authService.authorizeEmployee(user);
+		authService.authorizeEmployeeandFinanceManager(user);
 		
 
 		List<Reimbursement> listOfReimbursements = userService.getAllReimbursementById(user);

@@ -2,3 +2,24 @@
     display: flex;
     justify-content: space-between;
 }
+
+.is-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.column {
+    display: block;
+    flex-basis: 0;
+    flex-grow: 0.49;
+    flex-shrink: 1;
+    padding: .75rem;
+}
+
+.columns {
+    margin-right: -.75rem;
+    margin-top: .75rem;
+    margin-left: .75rem;
+}
+

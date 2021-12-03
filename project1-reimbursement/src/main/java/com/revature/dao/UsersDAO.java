@@ -51,7 +51,7 @@ public class UsersDAO {
 			String sql = "INSERT INTO ers_reimbursement (reimb_amount, reimb_submitted, reimb_type, "
 					+ "reimb_description, reimb_customer_receipt, fk_reimb_author)\r\n"
 					+ "VALUES\r\n"
-					+ "(?, now(), ?, ?, ?, ?);";
+					+ "(?, date_trunc('seconds', now()::timestamp), ?, ?, ?, ?);";
 			ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			ps.setDouble(1, reimbAmount);
@@ -130,10 +130,11 @@ public class UsersDAO {
 
 		try (Connection con = JDBCUtility.getConnection()) {
 
-			String sql = "SELECT * FROM ers_reimbursement WHERE fk_reimb_author = ? ORDER BY reimb_id;";
+			String sql = "SELECT * FROM ers_reimbursement WHERE fk_reimb_author = ? OR fk_reimb_resolver = ? ORDER BY reimb_id;";
 			ps = con.prepareStatement(sql);
 
 			ps.setInt(1, id);
+			ps.setInt(2, id);
 
 			ResultSet rs = ps.executeQuery();
 
@@ -178,7 +179,7 @@ public class UsersDAO {
 		try (Connection con = JDBCUtility.getConnection()) {
 
 			String sql = "UPDATE ers_reimbursement\r\n"
-					+ "SET reimb_resolved = now(), fk_reimb_resolver = ?, reimb_status = ?\r\n" + "WHERE reimb_id = ?;";
+					+ "SET reimb_resolved = date_trunc('seconds', now()::timestamp), fk_reimb_resolver = ?, reimb_status = ?\r\n" + "WHERE reimb_id = ?;";
 			ps = con.prepareStatement(sql);
 
 			ps.setInt(1, reimbAuthor);

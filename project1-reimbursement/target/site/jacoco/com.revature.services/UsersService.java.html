@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UsersService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project1-reimbursement</a> &gt; <a href="index.source.html" class="el_package">com.revature.services</a> &gt; <span class="el_source">UsersService.java</span></div><h1>UsersService.java</h1><pre class="source lang-java linenums">package com.revature.services;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.InvalidParameterException;
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.security.auth.login.FailedLoginException;
+
+import com.revature.dao.UsersDAO;
+import com.revature.exceptions.ReimbursementNotFoundExcpetion;
+import com.revature.exceptions.UnauthorizedException;
+import com.revature.models.Reimbursement;
+import com.revature.models.Users;
+
+public class UsersService {
+
+	UsersDAO userDao;
+
+<span class="nc" id="L23">	public UsersService() {</span>
+<span class="nc" id="L24">		this.userDao = new UsersDAO();</span>
+<span class="nc" id="L25">	}</span>
+
+	public Users getUserByUsernameAndPassword(String ersUsername, String ersPassword)
+			throws FailedLoginException, SQLException {
+
+<span class="nc" id="L30">		Users user = this.userDao.selectUserByUsernameAndPassword(ersUsername, ersPassword);</span>
+
+<span class="nc bnc" id="L32" title="All 2 branches missed.">		if (user == null) {</span>
+<span class="nc" id="L33">			throw new FailedLoginException(&quot;Incorrect username and/or password!&quot;);</span>
+		}
+
+<span class="nc" id="L36">		return user;</span>
+	}
+
+	public List&lt;Reimbursement&gt; getAllReimbursement() throws SQLException {
+
+<span class="nc" id="L41">		return this.userDao.selectAllReimbursements();</span>
+	}
+
+	public List&lt;Reimbursement&gt; getAllReimbursementById(Users user) throws SQLException {
+
+<span class="nc" id="L46">		return this.userDao.selectAllReimbursementsById(user.getErsUserId());</span>
+
+	}
+
+	public Reimbursement editReimbursement(Users user, String reimbId, String reimbStatus)
+			throws SQLException, ReimbursementNotFoundExcpetion, UnauthorizedException, IOException {
+
+<span class="nc" id="L53">		int rId = Integer.parseInt(reimbId);</span>
+<span class="nc" id="L54">		int reimbAuthor = user.getErsUserId();</span>
+
+<span class="nc" id="L56">		Reimbursement getReimbursementById = this.userDao.selectReimbursementById(rId);</span>
+
+<span class="nc bnc" id="L58" title="All 2 branches missed.">		if (getReimbursementById == null) {</span>
+<span class="nc" id="L59">			throw new ReimbursementNotFoundExcpetion(&quot;There is no exisiting Reimbursement with that id of &quot; + rId);</span>
+		}
+
+<span class="nc bnc" id="L62" title="All 2 branches missed.">		if (getReimbursementById.getReimbAuthor() == reimbAuthor) {</span>
+<span class="nc" id="L63">			throw new UnauthorizedException(&quot;Cannot approve/reject your own Reimbursement request!&quot;);</span>
+		}
+
+<span class="nc bnc" id="L66" title="All 2 branches missed.">		if (getReimbursementById.getReimbResolver() != 0) {</span>
+<span class="nc" id="L67">			throw new UnauthorizedException(&quot;This request has already been Approved/Rejected!&quot;);</span>
+		}
+
+<span class="nc" id="L70">		return this.userDao.updateReimbursement(reimbAuthor, rId, getReimbursementById, reimbStatus);</span>
+
+	}
+
+	public InputStream getReceiptFromReimbursementById(Users currentlyLoggedInUser, String reimbId)
+			throws SQLException, UnauthorizedException {
+
+<span class="nc" id="L77">		int id = Integer.parseInt(reimbId);</span>
+
+<span class="nc" id="L79">		Reimbursement checkResolverId = this.userDao.selectReimbursementById(id);</span>
+
+<span class="nc" id="L81">		InputStream receipt = this.userDao.selectReceiptFromReimbursementById(id, currentlyLoggedInUser.getErsUserId());</span>
+
+<span class="nc bnc" id="L83" title="All 2 branches missed.">		if (currentlyLoggedInUser.getErsUserId() != checkResolverId.getReimbResolver()) {</span>
+<span class="nc" id="L84">			throw new UnauthorizedException(&quot;This Receipt belongs to another Finance Manager!&quot;);</span>
+		}
+
+<span class="nc bnc" id="L87" title="All 2 branches missed.">		if (receipt == null) {</span>
+<span class="nc" id="L88">			throw new InvalidParameterException(&quot;Image was not found for reimbursement id &quot; + id);</span>
+		}
+
+<span class="nc" id="L91">		return receipt;</span>
+	}
+
+	public InputStream getCustomerReceiptFromReimbursementById(Users user, String reimbId) throws SQLException, UnauthorizedException {
+
+		try {
+			
+<span class="nc" id="L98">			int id = Integer.parseInt(reimbId);</span>
+			
+<span class="nc bnc" id="L100" title="All 4 branches missed.">			if (user.getErsRole().equals(&quot;Employee&quot;) || user.getErsRole().equals(&quot;Finance Manager&quot;)) {</span>
+				
+<span class="nc" id="L102">				int userId = user.getErsUserId();</span>
+				
+<span class="nc" id="L104">				List&lt;Reimbursement&gt; reimbursementsThatBelongsToEmployee = this.userDao.selectAllReimbursementsById(userId);</span>
+<span class="nc" id="L105">				Set&lt;Integer&gt; reimbursementIdsEncountered = new HashSet&lt;&gt;();</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">				for (Reimbursement r : reimbursementsThatBelongsToEmployee) {</span>
+<span class="nc" id="L107">					reimbursementIdsEncountered.add(r.getReimbId());</span>
+<span class="nc" id="L108">				}</span>
+				
+<span class="nc bnc" id="L110" title="All 2 branches missed.">				if (!reimbursementIdsEncountered.contains(id)) {</span>
+<span class="nc" id="L111">					throw new UnauthorizedException(&quot;You cannot access the images of reimbursements that do not belong to yourself&quot;);</span>
+				}
+			}
+		
+
+<span class="nc" id="L116">		InputStream receipt = this.userDao.selectCustomerReceiptFromReimbursementById(id);</span>
+
+<span class="nc bnc" id="L118" title="All 2 branches missed.">		if (receipt == null) {</span>
+<span class="nc" id="L119">			throw new InvalidParameterException(&quot;Image was not found for reimbursement id &quot; + id);</span>
+		}
+
+<span class="nc" id="L122">		return receipt;</span>
+		
+<span class="nc" id="L124">		} catch (NumberFormatException e) {</span>
+<span class="nc" id="L125">			throw new InvalidParameterException(&quot;Reimbursement id supplied must be an int&quot;);</span>
+		}
+	}
+
+	public Users newUser(Users newUser) throws SQLException {
+
+<span class="nc bnc" id="L131" title="All 2 branches missed.">		if (newUser.getErsFirstName().trim().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L132">			throw new InvalidParameterException(&quot;First Name field must not be empty!&quot;);</span>
+		}
+
+<span class="nc bnc" id="L135" title="All 2 branches missed.">		if (newUser.getErsLastName().trim().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L136">			throw new InvalidParameterException(&quot;Last Name field must not be empty!&quot;);</span>
+		}
+
+<span class="nc bnc" id="L139" title="All 2 branches missed.">		if (newUser.getErsUsername().trim().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L140">			throw new InvalidParameterException(&quot;Username field must not be empty!&quot;);</span>
+		}
+
+<span class="nc bnc" id="L143" title="All 2 branches missed.">		if (newUser.getErsPassword().trim().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L144">			throw new InvalidParameterException(&quot;Password field must not be empty!&quot;);</span>
+		}
+
+<span class="nc bnc" id="L147" title="All 2 branches missed.">		if (newUser.getErsEmail().trim().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L148">			throw new InvalidParameterException(&quot;Email field must not be empty!&quot;);</span>
+		}
+
+<span class="nc" id="L151">		Set&lt;String&gt; validErsRole = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L152">		validErsRole.add(&quot;Finance Manager&quot;);</span>
+<span class="nc" id="L153">		validErsRole.add(&quot;Employee&quot;);</span>
+
+<span class="nc bnc" id="L155" title="All 2 branches missed.">		if (!validErsRole.contains(newUser.getErsRole())) {</span>
+<span class="nc" id="L156">			throw new InvalidParameterException(&quot;Role must be of Finance Manager or Employee!&quot;);</span>
+		}
+
+<span class="nc" id="L159">		return this.userDao.insertNewUser(newUser);</span>
+
+	}
+
+	public List&lt;Reimbursement&gt; getAllReimbursementByStatus(String reimbStatus) throws SQLException {
+
+<span class="nc" id="L165">		Set&lt;String&gt; validStatus = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L166">		validStatus.add(&quot;Pending&quot;);</span>
+<span class="nc" id="L167">		validStatus.add(&quot;Approved&quot;);</span>
+<span class="nc" id="L168">		validStatus.add(&quot;Rejected&quot;);</span>
+
+<span class="nc bnc" id="L170" title="All 2 branches missed.">		if (!validStatus.contains(reimbStatus)) {</span>
+<span class="nc" id="L171">			throw new InvalidParameterException(&quot;Reimbursement Status can only be: Pending, Approved, or Rejected!&quot;);</span>
+		}
+
+<span class="nc" id="L174">		return this.userDao.selectAllReimbursementsByStatus(reimbStatus);</span>
+	}
+
+	public Reimbursement newReimbursement(Users user, String reimbAmount, String reimbType, String reimbDescription,
+			String mimeType, InputStream content) throws SQLException {
+
+<span class="nc bnc" id="L180" title="All 2 branches missed.">		if (Double.parseDouble(reimbAmount) == 0) {</span>
+<span class="nc" id="L181">			throw new InvalidParameterException(&quot;Reimbursement Amount cannot be empty and/or Zero!&quot;);</span>
+		}
+
+<span class="nc" id="L184">		Set&lt;String&gt; validReimbType = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L185">		validReimbType.add(&quot;Food&quot;);</span>
+<span class="nc" id="L186">		validReimbType.add(&quot;Lodging&quot;);</span>
+<span class="nc" id="L187">		validReimbType.add(&quot;Travel&quot;);</span>
+<span class="nc" id="L188">		validReimbType.add(&quot;Other&quot;);</span>
+
+<span class="nc" id="L190">		Set&lt;String&gt; allowedFileTypes = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L191">		allowedFileTypes.add(&quot;image/jpeg&quot;);</span>
+<span class="nc" id="L192">		allowedFileTypes.add(&quot;image/png&quot;);</span>
+<span class="nc" id="L193">		allowedFileTypes.add(&quot;image/gif&quot;);</span>
+
+<span class="nc bnc" id="L195" title="All 2 branches missed.">		if (!allowedFileTypes.contains(mimeType)) {</span>
+<span class="nc" id="L196">			throw new InvalidParameterException(&quot;When adding an assignment image, only PNG, JPEG, or GIF are allowed&quot;);</span>
+		}
+
+<span class="nc bnc" id="L199" title="All 2 branches missed.">		if (!validReimbType.contains(reimbType)) {</span>
+<span class="nc" id="L200">			throw new InvalidParameterException(&quot;Reimbursement Type can only be: Food, Lodging, Travel, or Other&quot;);</span>
+		}
+<span class="nc bnc" id="L202" title="All 2 branches missed.">		if (reimbDescription.trim().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L203">			throw new InvalidParameterException(&quot;Please put some description on why you want a Reimbursement...&quot;);</span>
+		}
+
+<span class="nc" id="L206">		int reimbAuthor = user.getErsUserId();</span>
+<span class="nc" id="L207">		double amount = Double.parseDouble(reimbAmount);</span>
+
+<span class="nc" id="L209">		return this.userDao.insertNewReimbursement(reimbAuthor, amount, reimbType, reimbDescription, content);</span>
+
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

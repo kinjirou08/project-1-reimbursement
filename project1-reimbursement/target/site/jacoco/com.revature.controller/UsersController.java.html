@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UsersController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project1-reimbursement</a> &gt; <a href="index.source.html" class="el_package">com.revature.controller</a> &gt; <span class="el_source">UsersController.java</span></div><h1>UsersController.java</h1><pre class="source lang-java linenums">package com.revature.controller;
+
+import java.io.InputStream;
+import java.util.List;
+
+import org.apache.tika.Tika;
+
+import com.revature.dto.ExceptionMessageDTO;
+import com.revature.models.Reimbursement;
+import com.revature.models.Users;
+import com.revature.services.AuthorizationService;
+import com.revature.services.UsersService;
+
+import io.javalin.Javalin;
+import io.javalin.http.Handler;
+import io.javalin.http.UploadedFile;
+
+public class UsersController implements MapEndpoints {
+
+	private UsersService userService;
+	private AuthorizationService authService;
+	private static final String VALIDATED_USER = &quot;validateduser&quot;;
+
+<span class="nc" id="L24">	public UsersController() {</span>
+<span class="nc" id="L25">		userService = new UsersService();</span>
+<span class="nc" id="L26">		authService = new AuthorizationService();</span>
+<span class="nc" id="L27">	}</span>
+
+<span class="nc" id="L29">	private Handler addReimbursement = ctx -&gt; {</span>
+
+<span class="nc" id="L31">		Users user = (Users) ctx.req.getSession().getAttribute(VALIDATED_USER);</span>
+<span class="nc" id="L32">		authService.authorizeEmployeeandFinanceManager(user);</span>
+		
+<span class="nc" id="L34">		String reimbAmount = ctx.formParam(&quot;reimbAmount&quot;);</span>
+<span class="nc" id="L35">		String reimbType = ctx.formParam(&quot;reimbType&quot;);</span>
+<span class="nc" id="L36">		String reimbDescription = ctx.formParam(&quot;reimbDescription&quot;);</span>
+		
+<span class="nc" id="L38">		UploadedFile file = ctx.uploadedFile(&quot;reimbCustomerReceipt&quot;);</span>
+		
+<span class="nc bnc" id="L40" title="All 2 branches missed.">		if (file == null) {</span>
+<span class="nc" id="L41">			ctx.status(400);</span>
+<span class="nc" id="L42">			ctx.json(new ExceptionMessageDTO(&quot;Must have an image to upload&quot;));</span>
+<span class="nc" id="L43">			return;</span>
+		}
+		
+<span class="nc" id="L46">		InputStream content = file.getContent(); // This is the most important. It is the actual content of the file</span>
+
+<span class="nc" id="L48">		Tika tika = new Tika();</span>
+		
+<span class="nc" id="L50">		String mimeType = tika.detect(content);</span>
+
+<span class="nc" id="L52">		Reimbursement newReimbursement = userService.newReimbursement(user, reimbAmount, reimbType, reimbDescription, mimeType, content);</span>
+
+<span class="nc" id="L54">		ctx.json(newReimbursement);</span>
+<span class="nc" id="L55">		ctx.status(201);</span>
+
+<span class="nc" id="L57">	};</span>
+
+<span class="nc" id="L59">	private Handler getAllReimbursement = ctx -&gt; {</span>
+
+<span class="nc" id="L61">		Users user = (Users) ctx.req.getSession().getAttribute(VALIDATED_USER);</span>
+<span class="nc" id="L62">		authService.authorizeFinanceManager(user);</span>
+
+<span class="nc" id="L64">		String reimbStatus = ctx.queryParam(&quot;reimbStatus&quot;);</span>
+
+<span class="nc bnc" id="L66" title="All 2 branches missed.">		if (reimbStatus == null) {</span>
+<span class="nc" id="L67">			List&lt;Reimbursement&gt; listOfReimbursements = userService.getAllReimbursement();</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">			if(listOfReimbursements.isEmpty()) {</span>
+<span class="nc" id="L69">				ctx.result(&quot;There is nothing to show here!&quot;);</span>
+			} else {
+<span class="nc" id="L71">				ctx.json(listOfReimbursements);</span>
+			}
+<span class="nc" id="L73">		} else {</span>
+<span class="nc" id="L74">			List&lt;Reimbursement&gt; listOfReimbursements = userService.getAllReimbursementByStatus(reimbStatus);</span>
+<span class="nc" id="L75">			ctx.json(listOfReimbursements);</span>
+		}
+
+<span class="nc" id="L78">	};</span>
+
+<span class="nc" id="L80">	private Handler getAllReimbursementById = ctx -&gt; {</span>
+
+<span class="nc" id="L82">		Users user = (Users) ctx.req.getSession().getAttribute(VALIDATED_USER);</span>
+<span class="nc" id="L83">		authService.authorizeEmployee(user);</span>
+		
+
+<span class="nc" id="L86">		List&lt;Reimbursement&gt; listOfReimbursements = userService.getAllReimbursementById(user);</span>
+
+<span class="nc" id="L88">		ctx.json(listOfReimbursements);</span>
+<span class="nc" id="L89">	};</span>
+
+<span class="nc" id="L91">	private Handler editReimbursement = ctx -&gt; {</span>
+
+<span class="nc" id="L93">		Users user = (Users) ctx.req.getSession().getAttribute(VALIDATED_USER);</span>
+<span class="nc" id="L94">		authService.authorizeFinanceManager(user);</span>
+
+<span class="nc" id="L96">		String reimbId = ctx.pathParam(&quot;reimb_id&quot;);</span>
+<span class="nc" id="L97">		String reimbStatus = ctx.formParam(&quot;reimbStatus&quot;);</span>
+
+<span class="nc" id="L99">		Reimbursement reimbToBeUpdated = userService.editReimbursement(user, reimbId, reimbStatus);</span>
+
+<span class="nc" id="L101">		ctx.json(reimbToBeUpdated);</span>
+
+<span class="nc" id="L103">	};</span>
+<span class="nc" id="L104">	private Handler getReceiptFromReimbursementById = ctx -&gt; {</span>
+		// protect endpoint
+<span class="nc" id="L106">		Users user = (Users) ctx.req.getSession().getAttribute(VALIDATED_USER);</span>
+<span class="nc" id="L107">		authService.authorizeFinanceManager(user);</span>
+
+<span class="nc" id="L109">		String reimbId = ctx.pathParam(&quot;id&quot;);</span>
+
+<span class="nc" id="L111">		InputStream receipt = userService.getReceiptFromReimbursementById(user, reimbId);</span>
+
+<span class="nc" id="L113">		Tika tika = new Tika();</span>
+<span class="nc" id="L114">		String mimeType = tika.detect(receipt);</span>
+
+<span class="nc" id="L116">		ctx.contentType(mimeType);</span>
+<span class="nc" id="L117">		ctx.result(receipt);</span>
+<span class="nc" id="L118">	};</span>
+	
+<span class="nc" id="L120">	private Handler geCustomerReceiptFromReimbursementById = ctx -&gt; {</span>
+		// protect endpoint
+<span class="nc" id="L122">		Users user = (Users) ctx.req.getSession().getAttribute(VALIDATED_USER);</span>
+<span class="nc" id="L123">		authService.authorizeEmployeeandFinanceManager(user);</span>
+
+<span class="nc" id="L125">		String reimbId = ctx.pathParam(&quot;id&quot;);</span>
+
+<span class="nc" id="L127">		InputStream receipt = userService.getCustomerReceiptFromReimbursementById(user, reimbId);</span>
+
+<span class="nc" id="L129">		Tika tika = new Tika();</span>
+<span class="nc" id="L130">		String mimeType = tika.detect(receipt);</span>
+
+<span class="nc" id="L132">		ctx.contentType(mimeType);</span>
+<span class="nc" id="L133">		ctx.result(receipt);</span>
+<span class="nc" id="L134">	};</span>
+
+	@Override
+	public void mapEndpoints(Javalin app) {
+<span class="nc" id="L138">		app.post(&quot;/newReimbursement&quot;, addReimbursement);</span>
+<span class="nc" id="L139">		app.get(&quot;/reimbursements&quot;, getAllReimbursement);</span>
+<span class="nc" id="L140">		app.get(&quot;/reimbursements/user&quot;, getAllReimbursementById);</span>
+<span class="nc" id="L141">		app.patch(&quot;/reimbursements/{reimb_id}/update&quot;, editReimbursement);</span>
+<span class="nc" id="L142">		app.get(&quot;/reimbursements/{id}/reimbursementReceipt&quot;, getReceiptFromReimbursementById);</span>
+<span class="nc" id="L143">		app.get(&quot;/reimbursements/{id}/customerReceipt&quot;, geCustomerReceiptFromReimbursementById);</span>
+<span class="nc" id="L144">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

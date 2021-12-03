@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Reimbursement.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project1-reimbursement</a> &gt; <a href="index.source.html" class="el_package">com.revature.models</a> &gt; <span class="el_source">Reimbursement.java</span></div><h1>Reimbursement.java</h1><pre class="source lang-java linenums">package com.revature.models;
+
+import java.util.Objects;
+
+public class Reimbursement {
+	
+	private int reimbId;
+	private double reimbAmount;
+	private String reimbSubmitted;
+	private String reimbResolved;
+	private String reimbStatus; // Default = &quot;Pending&quot; -- other options: &quot;Approved&quot; AND &quot;Rejected&quot;
+	private String reimbType; // Food, Lodging, Travel, Other
+	private String reimbDescription;
+	private int reimbAuthor;
+	private int reimbResolver;
+	
+	public Reimbursement() {
+<span class="nc" id="L18">		super();</span>
+<span class="nc" id="L19">	}</span>
+
+	public Reimbursement(int reimbId, double reimbAmount, String reimbSubmitted, String reimbResolved,
+			String reimbStatus, String reimbType, String reimbDescription, int reimbAuthor,
+			int reimbResolver) {
+<span class="nc" id="L24">		super();</span>
+<span class="nc" id="L25">		this.reimbId = reimbId;</span>
+<span class="nc" id="L26">		this.reimbAmount = reimbAmount;</span>
+<span class="nc" id="L27">		this.reimbSubmitted = reimbSubmitted;</span>
+<span class="nc" id="L28">		this.reimbResolved = reimbResolved;</span>
+<span class="nc" id="L29">		this.reimbStatus = reimbStatus;</span>
+<span class="nc" id="L30">		this.reimbType = reimbType;</span>
+<span class="nc" id="L31">		this.reimbDescription = reimbDescription;</span>
+<span class="nc" id="L32">		this.reimbAuthor = reimbAuthor;</span>
+<span class="nc" id="L33">		this.reimbResolver = reimbResolver;</span>
+<span class="nc" id="L34">	}</span>
+
+	public int getReimbId() {
+<span class="nc" id="L37">		return reimbId;</span>
+	}
+
+	public void setReimbId(int reimbId) {
+<span class="nc" id="L41">		this.reimbId = reimbId;</span>
+<span class="nc" id="L42">	}</span>
+
+	public double getReimbAmount() {
+<span class="nc" id="L45">		return reimbAmount;</span>
+	}
+
+	public void setReimbAmount(double reimbAmount) {
+<span class="nc" id="L49">		this.reimbAmount = reimbAmount;</span>
+<span class="nc" id="L50">	}</span>
+
+	public String getReimbSubmitted() {
+<span class="nc" id="L53">		return reimbSubmitted;</span>
+	}
+
+	public void setReimbSubmitted(String reimbSubmitted) {
+<span class="nc" id="L57">		this.reimbSubmitted = reimbSubmitted;</span>
+<span class="nc" id="L58">	}</span>
+
+	public String getReimbResolved() {
+<span class="nc" id="L61">		return reimbResolved;</span>
+	}
+
+	public void setReimbResolved(String reimbResolved) {
+<span class="nc" id="L65">		this.reimbResolved = reimbResolved;</span>
+<span class="nc" id="L66">	}</span>
+
+	public String getReimbStatus() {
+<span class="nc" id="L69">		return reimbStatus;</span>
+	}
+
+	public void setReimbStatus(String reimbStatus) {
+<span class="nc" id="L73">		this.reimbStatus = reimbStatus;</span>
+<span class="nc" id="L74">	}</span>
+
+	public String getReimbType() {
+<span class="nc" id="L77">		return reimbType;</span>
+	}
+
+	public void setReimbType(String reimbType) {
+<span class="nc" id="L81">		this.reimbType = reimbType;</span>
+<span class="nc" id="L82">	}</span>
+
+	public String getReimbDescription() {
+<span class="nc" id="L85">		return reimbDescription;</span>
+	}
+
+	public void setReimbDescription(String reimbDescription) {
+<span class="nc" id="L89">		this.reimbDescription = reimbDescription;</span>
+<span class="nc" id="L90">	}</span>
+
+	public int getReimbAuthor() {
+<span class="nc" id="L93">		return reimbAuthor;</span>
+	}
+
+	public void setReimbAuthor(int reimbAuthor) {
+<span class="nc" id="L97">		this.reimbAuthor = reimbAuthor;</span>
+<span class="nc" id="L98">	}</span>
+
+	public int getReimbResolver() {
+<span class="nc" id="L101">		return reimbResolver;</span>
+	}
+
+	public void setReimbResolver(int reimbResolver) {
+<span class="nc" id="L105">		this.reimbResolver = reimbResolver;</span>
+<span class="nc" id="L106">	}</span>
+
+	@Override
+	public int hashCode() {
+<span class="nc" id="L110">		return Objects.hash(reimbAmount, reimbAuthor, reimbDescription, reimbId, reimbResolved, reimbResolver,</span>
+				reimbStatus, reimbSubmitted, reimbType);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="nc bnc" id="L116" title="All 2 branches missed.">		if (this == obj)</span>
+<span class="nc" id="L117">			return true;</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">		if (obj == null)</span>
+<span class="nc" id="L119">			return false;</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L121">			return false;</span>
+<span class="nc" id="L122">		Reimbursement other = (Reimbursement) obj;</span>
+<span class="nc bnc" id="L123" title="All 4 branches missed.">		return Double.doubleToLongBits(reimbAmount) == Double.doubleToLongBits(other.reimbAmount)</span>
+<span class="nc bnc" id="L124" title="All 4 branches missed.">				&amp;&amp; reimbAuthor == other.reimbAuthor &amp;&amp; Objects.equals(reimbDescription, other.reimbDescription)</span>
+<span class="nc bnc" id="L125" title="All 4 branches missed.">				&amp;&amp; reimbId == other.reimbId &amp;&amp; Objects.equals(reimbResolved, other.reimbResolved)</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">				&amp;&amp; reimbResolver == other.reimbResolver &amp;&amp; Objects.equals(reimbStatus, other.reimbStatus)</span>
+<span class="nc bnc" id="L127" title="All 4 branches missed.">				&amp;&amp; Objects.equals(reimbSubmitted, other.reimbSubmitted) &amp;&amp; Objects.equals(reimbType, other.reimbType);</span>
+	}
+
+	@Override
+	public String toString() {
+<span class="nc" id="L132">		return &quot;Reimbursement [reimbId=&quot; + reimbId + &quot;, reimbAmount=&quot; + reimbAmount + &quot;, reimbSubmitted=&quot;</span>
+				+ reimbSubmitted + &quot;, reimbResolved=&quot; + reimbResolved + &quot;, reimbStatus=&quot; + reimbStatus + &quot;, reimbType=&quot;
+				+ reimbType + &quot;, reimbDescription=&quot; + reimbDescription + &quot;, reimbAuthor=&quot; + reimbAuthor
+				+ &quot;, reimbResolver=&quot; + reimbResolver + &quot;]&quot;;
+	}
+
+
+		
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

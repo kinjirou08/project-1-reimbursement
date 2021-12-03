@@ -32,7 +32,7 @@ public class UsersService {
 		if (user == null) {
 			throw new FailedLoginException("Incorrect username and/or password!");
 		}
-
+		
 		return user;
 	}
 
@@ -72,13 +72,17 @@ public class UsersService {
 	}
 
 	public InputStream getReceiptFromReimbursementById(Users currentlyLoggedInUser, String reimbId)
-			throws SQLException, UnauthorizedException {
+			throws SQLException, UnauthorizedException, ReimbursementNotFoundExcpetion {
 
 		int id = Integer.parseInt(reimbId);
 
 		Reimbursement checkResolverId = this.userDao.selectReimbursementById(id);
 
 		InputStream receipt = this.userDao.selectReceiptFromReimbursementById(id, currentlyLoggedInUser.getErsUserId());
+		
+		if(checkResolverId == null) {
+			throw new ReimbursementNotFoundExcpetion("There is no exisiting Reimbursement with the id of " +id);
+		}
 
 		if (currentlyLoggedInUser.getErsUserId() != checkResolverId.getReimbResolver()) {
 			throw new UnauthorizedException("This Receipt belongs to another Finance Manager!");

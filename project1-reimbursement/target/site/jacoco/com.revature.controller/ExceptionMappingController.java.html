@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExceptionMappingController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project1-reimbursement</a> &gt; <a href="index.source.html" class="el_package">com.revature.controller</a> &gt; <span class="el_source">ExceptionMappingController.java</span></div><h1>ExceptionMappingController.java</h1><pre class="source lang-java linenums">package com.revature.controller;
+
+import java.security.InvalidParameterException;
+import java.sql.SQLException;
+
+import javax.security.auth.login.FailedLoginException;
+
+import com.revature.dto.ExceptionMessageDTO;
+import com.revature.exceptions.ReimbursementNotFoundExcpetion;
+import com.revature.exceptions.UnauthorizedException;
+
+import io.javalin.Javalin;
+
+<span class="nc" id="L14">public class ExceptionMappingController {</span>
+	
+	public void mapExceptions(Javalin app) {
+<span class="nc" id="L17">		app.exception(InvalidParameterException.class, (e, ctx) -&gt; {</span>
+<span class="nc" id="L18">			ctx.status(400);</span>
+<span class="nc" id="L19">			ctx.json(new ExceptionMessageDTO(e.getMessage()));</span>
+<span class="nc" id="L20">		});</span>
+		
+<span class="nc" id="L22">		app.exception(ReimbursementNotFoundExcpetion.class, (e, ctx) -&gt; {</span>
+<span class="nc" id="L23">			ctx.status(404);</span>
+<span class="nc" id="L24">			ctx.json(new ExceptionMessageDTO(e.getMessage()));</span>
+<span class="nc" id="L25">		});</span>
+		
+<span class="nc" id="L27">		app.exception(UnauthorizedException.class, (e, ctx) -&gt; {</span>
+<span class="nc" id="L28">			ctx.status(401);</span>
+<span class="nc" id="L29">			ctx.json(new ExceptionMessageDTO(e.getMessage()));</span>
+<span class="nc" id="L30">		});</span>
+		
+<span class="nc" id="L32">		app.exception(SQLException.class, (e, ctx) -&gt; {</span>
+<span class="nc" id="L33">			ctx.status(400);</span>
+<span class="nc" id="L34">			ctx.json(new ExceptionMessageDTO(e.getMessage()));</span>
+<span class="nc" id="L35">		});</span>
+		
+<span class="nc" id="L37">		app.exception(FailedLoginException.class, (e, ctx) -&gt; {</span>
+<span class="nc" id="L38">			ctx.status(400);</span>
+<span class="nc" id="L39">			ctx.json(new ExceptionMessageDTO(e.getMessage()));</span>
+<span class="nc" id="L40">		});</span>
+<span class="nc" id="L41">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

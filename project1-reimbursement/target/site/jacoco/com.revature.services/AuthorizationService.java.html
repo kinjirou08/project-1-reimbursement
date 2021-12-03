@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthorizationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project1-reimbursement</a> &gt; <a href="index.source.html" class="el_package">com.revature.services</a> &gt; <span class="el_source">AuthorizationService.java</span></div><h1>AuthorizationService.java</h1><pre class="source lang-java linenums">package com.revature.services;
+
+import com.revature.exceptions.UnauthorizedException;
+import com.revature.models.Users;
+
+<span class="fc" id="L6">public class AuthorizationService {</span>
+	
+	public void authorizeEmployeeandFinanceManager(Users user) throws UnauthorizedException {
+<span class="fc bfc" id="L9" title="All 6 branches covered.">		if (user == null || !(user.getErsRole().equals(&quot;Employee&quot;) || user.getErsRole().equals(&quot;Finance Manager&quot;))) {</span>
+<span class="fc" id="L10">			throw new UnauthorizedException(&quot;You must be an Finance Manager/Employee to access this resource&quot;);</span>
+		}
+<span class="fc" id="L12">	}</span>
+	
+	public void authorizeEmployee(Users user) throws UnauthorizedException {
+<span class="fc bfc" id="L15" title="All 4 branches covered.">		if (user == null || !user.getErsRole().equals(&quot;Employee&quot;)) {</span>
+<span class="fc" id="L16">			throw new UnauthorizedException(&quot;You must be an Employee to access this resource&quot;);</span>
+		}
+<span class="fc" id="L18">	}</span>
+	
+	public void authorizeFinanceManager(Users user) throws UnauthorizedException {
+<span class="fc bfc" id="L21" title="All 4 branches covered.">		if (user == null || !user.getErsRole().equals(&quot;Finance Manager&quot;)) {</span>
+<span class="fc" id="L22">			throw new UnauthorizedException(&quot;You must be a Finance Manager to access this resource&quot;);</span>
+		}
+<span class="fc" id="L24">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
