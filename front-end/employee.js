@@ -87,19 +87,13 @@ async function populateTableWithReimbursements() {
         tdViewReceipt.appendChild(viewImageButton);
 
         viewImageButton.addEventListener('click', () => {
-            // Add the is-active class to the modal (so that the modal appears)
-            // inside of the modal on div.modal-content (div w/ class modal-content)
-            //  -> img tag with src="http://localhost:8080/assignments/{id}/image"
             let viewReceiptModal = document.querySelector('#view-receipt-modal');
 
-            // Close button
             let modalCloseElement = viewReceiptModal.querySelector('button');
             modalCloseElement.addEventListener('click', () => {
                 viewReceiptModal.classList.remove('is-active');
             });
 
-            // you can take an element and use querySelector on it to find the child elements
-            // that are nested within it
             let modalContentElement = viewReceiptModal.querySelector('.modal-content');
             modalContentElement.innerHTML = '';
 
@@ -153,6 +147,37 @@ closeButtonV2.addEventListener('click', () => {
     reimbModal.classList.remove('is-active');
 
 });
+
+let submitReimbursementButton = document.querySelector('#sumbit-reimbursement');
+
+submitReimbursementButton.addEventListener('click', addReimbursement);
+
+async function addReimbursement () {
+
+    let reimbTypeInput = document.querySelector('#reimb-type');
+    let value = reimbTypeInput.options[reimbTypeInput.selectedIndex].value;
+
+    let reimbDescription = document.querySelector('#reimb-description');
+    let reimbAmount = document.querySelector('#reimb-amount');
+
+    const file = fileInput.files[0];
+
+    let formData = new FormData();
+    formData.append('reimbAmount', reimbAmount.value);
+    formData.append('reimbType', value);
+    formData.append('reimbDescription', reimbDescription.value);
+    formData.append('reimbCustomerReceipt', file);
+
+    let res = await fetch('http://localhost:8080/newReimbursement', {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+    });
+
+    if (res.status === 201) { // If we successfully added an assignment
+        populateTableWithReimbursements(); // Refresh the table of assignments
+    }
+}
 
 const fileInput = document.querySelector('#reim-receipt input[type=file]');
   fileInput.onchange = () => {
