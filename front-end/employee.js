@@ -80,6 +80,37 @@ async function populateTableWithReimbursements() {
         let tdReimbAuthor = document.createElement('td');
         tdReimbAuthor.innerHTML = reimbursement.reimbAuthor;
 
+        let tdViewReceipt = document.createElement('td');
+        let viewImageButton = document.createElement('button');
+        viewImageButton.innerHTML = 'View Receipt';
+        viewImageButton.className = "button is-link"
+        tdViewReceipt.appendChild(viewImageButton);
+
+        viewImageButton.addEventListener('click', () => {
+            // Add the is-active class to the modal (so that the modal appears)
+            // inside of the modal on div.modal-content (div w/ class modal-content)
+            //  -> img tag with src="http://localhost:8080/assignments/{id}/image"
+            let viewReceiptModal = document.querySelector('#view-receipt-modal');
+
+            // Close button
+            let modalCloseElement = viewReceiptModal.querySelector('button');
+            modalCloseElement.addEventListener('click', () => {
+                viewReceiptModal.classList.remove('is-active');
+            });
+
+            // you can take an element and use querySelector on it to find the child elements
+            // that are nested within it
+            let modalContentElement = viewReceiptModal.querySelector('.modal-content');
+            modalContentElement.innerHTML = '';
+
+            let imageElement = document.createElement('img');
+            imageElement.setAttribute('src', `http://localhost:8080/reimbursements/${reimbursement.reimbId}/customerReceipt`);
+            modalContentElement.appendChild(imageElement);
+
+            viewReceiptModal.classList.add('is-active'); // add a class to the modal element to have it display
+
+        });
+
         tr.appendChild(tdReimbId);
         tr.appendChild(tdReimbAmount);
         tr.appendChild(tdReimbSubmitted);
@@ -89,11 +120,13 @@ async function populateTableWithReimbursements() {
         tr.appendChild(tdReimbDescription);
         tr.appendChild(tdReimbAuthor);
         tr.appendChild(tdReimbResolver);
+        tr.appendChild(tdViewReceipt);
 
         tbodyElement.appendChild(tr);
 
     }
 }
+
 
 let addAReimbursementLink = document.querySelector('#add-reimbursement');
 

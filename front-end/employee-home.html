@@ -10,6 +10,16 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+  <div class="modal" id = "view-receipt-modal">
+    <div class="modal-background"></div>
+    <div class="modal-content is-centered">
+      <p class="image is-4by3">
+        <img src="https://bulma.io/images/placeholders/1280x960.png" alt="">
+      </p>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+  </div>
+
   <div class="modal" id = "new-reimbursement-modal">
     <div class="modal-background"></div>
     <div class="modal-card">
@@ -144,8 +154,8 @@
         </div> -->
 
         <div class = "column">
-          <div class="container">
-            <div class="notification is-primary">
+         <!-- <div class="container"> -->
+            <div class="notification is-primary" style="padding-right: 24px;">
 
               <div class = "box label" style = "text-align: center; background-color: #e3e3e3ab;">
                 Reimbursement History
@@ -164,6 +174,7 @@
                           <th>Reason of Reimbursement</th>
                           <th>Reimbursement Author (ID)</th>
                           <th>Reimbursement Resolver (ID)</th>
+                          <th>Reimbursement Receipts</th>
                       </tr>
                   </thead>
                   <tbody>
