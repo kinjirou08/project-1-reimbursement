@@ -5,9 +5,6 @@ async function checkLoginStatus() {
         method: 'GET',
         credentials: 'include'
     });
-
-    // If the above request results in a 200 status code, that means we are actually logged in
-    // So we need to take the userRole information and determine where to redirect them to
     if (res.status === 200) {
         let userObj = await res.json();
 
@@ -18,7 +15,6 @@ async function checkLoginStatus() {
 }
 
 let loginButton = document.querySelector('#loginBtn');
-
 loginButton.addEventListener('click', isLoggedIn);
 
 async function isLoggedIn() {
@@ -40,14 +36,18 @@ async function isLoggedIn() {
 
         // if the status code is 400, data will represent an object
         // with the "message" property, which we can display
-        // if (res.status === 400) {
-        //     let loginErrorMessage = document.createElement('p');
-        //     let loginDiv = document.querySelector('#login-info');
+        if (res.status === 400) {
 
-        //     loginErrorMessage.innerHTML = data.message;
-        //     loginErrorMessage.style.color = 'red';
-        //     loginDiv.appendChild(loginErrorMessage);
-        // }
+            let loginErrorMessage = document.createElement('p');
+            let loginDiv = document.querySelector('#incorrect-credentials-container');
+            loginDiv.innerHTML = '';
+
+            loginErrorMessage.innerHTML = data.message;
+            loginErrorMessage.style.color = '#f14668';
+            loginErrorMessage.style.textAlign = 'center';
+            loginDiv.appendChild(loginErrorMessage);
+
+        }
 
         // However, if the status code is 200, the data variable will represent an object
         // that corresponds with the User

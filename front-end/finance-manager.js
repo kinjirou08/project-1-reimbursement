@@ -3,13 +3,13 @@ window.addEventListener('load', async () => {
 
     let res = await fetch('http://localhost:8080/loginStatus', {
         method: 'GET',
-        credentials: 'include'    
+        credentials: 'include'
     });
     // If the above request results in a 200 status code, that means we are actually logged in
-    // So we need to take the userRole information and determine where to redirect them to 
-    if (res.status === 200) {     
+    // So we need to take the userRole information and determine where to redirect them to
+    if (res.status === 200) {
         let userObj = await res.json();
-        
+
         if (userObj.ersRole === 'Employee') {
             window.location.href = 'employee-home.html';
         } else if (res.status === 401) {
@@ -31,4 +31,5 @@ logoutBtn.addEventListener('click', async () => {
         window.location.href = 'index.html';
     }
 
-})
+});
+
