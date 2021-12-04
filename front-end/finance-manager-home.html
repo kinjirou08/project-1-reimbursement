@@ -20,6 +20,83 @@
     <button class="modal-close is-large" aria-label="close"></button>
   </div>
 
+  <div class="modal" id = "new-reimbursement-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">File a Reimbursement Request</p>
+        <button class="delete" id = "cancel-reimbursement" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+
+        <div class="field is-horizontal">
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <label class="label" >Reimbursement Type</label>
+                          <div class="select is-fullwidth is-info" >
+                              <select id = "reimb-type" style = "background-color: #e3e3e3ab;">
+                              <option>Food</option>
+                              <option>Lodging</option>
+                              <option>Travel</option>
+                              <option>Other</option>
+                              </select>
+                          </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class = "field-body">
+            <div class="field">
+                <label class="label" >Reason of Reimbursement</label>
+                <textarea id = "reimb-description" class="textarea is-primary is-info"
+                placeholder="Description" style = "background-color: #e3e3e3ab;"></textarea>
+            </div>
+        </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class = "field-body">
+            <div class="field is-narrow">
+                <label class="label" >Reimbursement Amount</label>
+                        <input id = "reimb-amount" type="text" placeholder="$"  style = "background-color: #e3e3e3ab;"
+                        class="input is-info" required>
+            </div>
+        </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class = "field-body">
+            <div class="field">
+              <div class="file is-info has-name is-fullwidth" id = "reim-receipt">
+                <label class="file-label">
+                  <input class="file-input" type="file" name="resume">
+                  <span class="file-cta">
+                    <span class="file-icon">
+                      <i class="fas fa-upload"></i>
+                    </span>
+                    <span class="file-label">
+                      Upload Receipt
+                    </span>
+                  </span>
+                  <span class="file-name" style = "background-color: #e3e3e3ab;">
+                      Receipt must be of JPEG/JPG, PNG, or GIF
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-success" id = "sumbit-reimbursement">Submit</button>
+        <button class="button" id = "cancel-reimbursement-v2">Cancel</button>
+      </footer>
+    </div>
+  </div>
+
 
 
   <nav class="navbar" style = "background-color: #1c1c1c;" role="navigation" aria-label="main navigation">
@@ -30,8 +107,24 @@
       </a>
 
         <div class="navbar-dropdown" id = "select-options">
-          <a class="navbar-item" id = "add-reimbursement">
+          <a class="navbar-item " id = "add-reimbursement" >
             Add a Reimbursement
+          </a>
+          <div class="navbar-item has-background-grey-light" style ="color: #000000;">
+            Filter Reimbursement Requests By:
+          </div>
+          <hr class = "navbar-divider">
+          <a class="navbar-item" id = "filter-all" style="color: #000000; background-color: #51ffe5;">
+            All Requests
+          </a>
+          <a class="navbar-item has-background-warning" id = "filter-pending" style="color: #000000;">
+            Pending Requests
+          </a>
+          <a class="navbar-item has-background-success" id = "filter-approved" style="color: #000000;">
+            Approved Requests
+          </a>
+          <a class="navbar-item has-background-danger" id = "filter-rejected" style="color: #000000;">
+            Rejected Requests
           </a>
         </div>
       </div>

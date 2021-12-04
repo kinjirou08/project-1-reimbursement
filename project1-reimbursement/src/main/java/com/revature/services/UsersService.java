@@ -100,17 +100,28 @@ public class UsersService {
 		try {
 			
 			int id = Integer.parseInt(reimbId);
+			int userId = user.getErsUserId();
 			
-			if (user.getErsRole().equals("Employee") || user.getErsRole().equals("Finance Manager")) {
-				
-				int userId = user.getErsUserId();
-				
+			if (user.getErsRole().equals("Employee")) {
+							
 				List<Reimbursement> reimbursementsThatBelongsToEmployee = this.userDao.selectAllReimbursementsById(userId);
 				Set<Integer> reimbursementIdsEncountered = new HashSet<>();
 				for (Reimbursement r : reimbursementsThatBelongsToEmployee) {
 					reimbursementIdsEncountered.add(r.getReimbId());
 				}
+							
+				if (!reimbursementIdsEncountered.contains(id)) {
+					throw new UnauthorizedException("You cannot access the images of reimbursements that do not belong to yourself");
+				}
 				
+			} else if (user.getErsRole().equals("Finance Manager")) {
+				
+				List<Reimbursement> reimbursementsThatBelongsToManager = this.userDao.selectAllReimbursements();
+				Set<Integer> reimbursementIdsEncountered = new HashSet<>();
+				for (Reimbursement r : reimbursementsThatBelongsToManager) {
+					reimbursementIdsEncountered.add(r.getReimbId());
+				}
+							
 				if (!reimbursementIdsEncountered.contains(id)) {
 					throw new UnauthorizedException("You cannot access the images of reimbursements that do not belong to yourself");
 				}
