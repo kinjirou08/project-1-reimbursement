@@ -225,4 +225,11 @@ public class UsersService {
 
 	}
 
+	public Reimbursement getAReimbursementById(String reimbId) throws SQLException {
+		
+		int rId = Integer.parseInt(reimbId);
+		
+		return this.userDao.selectReimbursementById(rId);
+	}
+
 }

@@ -97,6 +97,63 @@
     </div>
   </div>
 
+  <div class="modal" id = "apporve-reject-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Approve or Reject a Reimbursement Request</p>
+        <button class="delete" id = "cancel-reimbursementv3" aria-label="close"></button>
+      </header>
+
+      <section class="modal-card-body">
+
+        <label>Reimbursement Id</label>
+        <input type = "text" id = "reimb-id">
+        <button id = "search">Search</button>
+        <table id="searched-reimb" class = "table is-bordered is-narrow" style = "background-color: #98ddd3;">
+          <thead>
+            <tr style = "text-align: center;">
+              <th>Reimbursement Id</th>
+              <th>Reimbursement Amount</th>
+              <th>Time of Reimbursement Request</th>
+              <th>Time of Reimbursement Resolved</th>
+              <th>Reimbursement Status</th>
+              <th>Reimbursement Type</th>
+              <th>Reason of Reimbursement</th>
+              <th>Reimbursement Author (ID)</th>
+              <th>Reimbursement Resolver (ID)</th>
+              <th>Reimbursement Receipts</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+
+        <div class="field is-horizontal">
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <label class="label">Approve or Reject</label>
+                          <div class="select is-fullwidth is-info" >
+                              <select id = "approved-rejected" style = "background-color: #e3e3e3ab;">
+                              <option>Approved</option>
+                              <option>Rejected</option>
+                              </select>
+                          </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-success" id = "approve-reject-reimbursement">Submit</button>
+        <button class="button" id = "cancel-reimbursementv4">Cancel</button>
+      </footer>
+    </div>
+  </div>
+
 
 
   <nav class="navbar" style = "background-color: #1c1c1c;" role="navigation" aria-label="main navigation">
@@ -125,6 +182,10 @@
           </a>
           <a class="navbar-item has-background-danger" id = "filter-rejected" style="color: #000000;">
             Rejected Requests
+          </a>
+          <hr class = "navbar-divider">
+          <a class="navbar-item" id = "approve-reject" style="color: #000000; background-color: #a051ff9e;">
+            Approve Or Reject Requests
           </a>
         </div>
       </div>

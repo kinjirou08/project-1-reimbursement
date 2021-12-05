@@ -55,6 +55,18 @@ public class UsersController implements MapEndpoints {
 		ctx.status(201);
 
 	};
+	
+	private Handler getAReimbursement = ctx -> {
+		
+		Users user = (Users) ctx.req.getSession().getAttribute(VALIDATED_USER);
+		authService.authorizeEmployeeandFinanceManager(user);
+		
+		String reimbId = ctx.pathParam("reimb_id");	
+		Reimbursement r = this.userService.getAReimbursementById(reimbId);
+		
+		ctx.json(r);
+		
+	};
 
 	private Handler getAllReimbursement = ctx -> {
 
@@ -136,6 +148,7 @@ public class UsersController implements MapEndpoints {
 	@Override
 	public void mapEndpoints(Javalin app) {
 		app.post("/newReimbursement", addReimbursement);
+		app.get("reimbursement/{reimb_id}", getAReimbursement);
 		app.get("/reimbursements", getAllReimbursement);
 		app.get("/reimbursements/user", getAllReimbursementById);
 		app.patch("/reimbursements/{reimb_id}/update", editReimbursement);

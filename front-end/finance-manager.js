@@ -19,18 +19,15 @@ window.addEventListener('load', async () => {
 });
 
 let logoutBtn = document.querySelector('#logoutBtn');
-
 logoutBtn.addEventListener('click', async () => {
 
     let res = await fetch('http://localhost:8080/logout', {
         'method': 'POST',
         'credentials': 'include'
     });
-
     if (res.status === 200) {
         window.location.href = 'index.html';
     }
-
 });
 
 async function populateTableWithReimbursements() {
@@ -38,22 +35,23 @@ async function populateTableWithReimbursements() {
         credentials: 'include',
         method: 'GET'
     });
-
     populate(res);
 }
 
-
+let reimbModal = document.querySelector('#new-reimbursement-modal');
 let addAReimbursementLink = document.querySelector('#add-reimbursement');
-
 addAReimbursementLink.addEventListener('click', newReimbursement);
 
-let reimbModal = document.querySelector('#new-reimbursement-modal');
-
 function newReimbursement() {
-
-  reimbModal.classList.add('is-active');
-
+    reimbModal.classList.add('is-active');
 }
+
+let approveOrRejectModal = document.querySelector('#apporve-reject-modal');
+let approveOrRejectRequestLink = document.querySelector('#approve-reject');
+
+approveOrRejectRequestLink.addEventListener('click', () => {
+    approveOrRejectModal.classList.add('is-active');
+});
 
 async function populate(res) {
     let tbodyElement = document.querySelector("#reimbursement-table tbody");
@@ -150,11 +148,8 @@ filterRequestByRejectedLink.addEventListener('click', async () => {
     let res = await fetch(`http://localhost:8080/reimbursements?reimbStatus=Rejected`, {
         credentials: 'include',
         method: 'GET'
-
     });
-
     populate(res);
-
 });
 
 let filterRequestByPendingLink = document.querySelector('#filter-pending');
@@ -163,11 +158,8 @@ filterRequestByPendingLink.addEventListener('click', async () => {
     let res = await fetch(`http://localhost:8080/reimbursements?reimbStatus=Pending`, {
         credentials: 'include',
         method: 'GET'
-
     });
-
     populate(res);
-
 });
 
 let filterRequestByApprovedLink = document.querySelector('#filter-approved');
@@ -176,29 +168,37 @@ filterRequestByApprovedLink.addEventListener('click', async () => {
     let res = await fetch(`http://localhost:8080/reimbursements?reimbStatus=Approved`, {
         credentials: 'include',
         method: 'GET'
-
     });
-
     populate(res);
-
 });
 
 let closeButton = reimbModal.querySelector('#cancel-reimbursement');
 closeButton.addEventListener('click', () => {
-
     reimbModal.classList.remove('is-active');
-
 });
 
 let closeButtonV2 = document.querySelector('#cancel-reimbursement-v2');
 closeButtonV2.addEventListener('click', () => {
-
     reimbModal.classList.remove('is-active');
+});
 
+let closeButtonV3 = approveOrRejectModal.querySelector('#cancel-reimbursementv3');
+closeButtonV3.addEventListener('click', () => {
+    approveOrRejectModal.classList.remove('is-active');
+    let tbodyElement = document.querySelector("#searched-reimb tbody");
+    tbodyElement.innerHTML = '';
+    location.reload();
+});
+
+let closeButtonV4 = document.querySelector('#cancel-reimbursementv4');
+closeButtonV4.addEventListener('click', () => {
+    approveOrRejectModal.classList.remove('is-active');
+    let tbodyElement = document.querySelector("#searched-reimb tbody");
+    tbodyElement.innerHTML = '';
+    location.reload();
 });
 
 let submitReimbursementButton = document.querySelector('#sumbit-reimbursement');
-
 submitReimbursementButton.addEventListener('click', addReimbursement);
 
 async function addReimbursement () {
@@ -222,7 +222,6 @@ async function addReimbursement () {
         credentials: 'include',
         body: formData
     });
-
     if (res.status === 201) {
         populateTableWithReimbursements();
     }
@@ -235,3 +234,110 @@ const fileInput = document.querySelector('#reim-receipt input[type=file]');
       fileName.textContent = fileInput.files[0].name;
     }
   }
+
+  let reimbId = document.querySelector('#reimb-id');
+
+  let searchButton = document.querySelector('#search');
+  searchButton.addEventListener('click', async () => {
+
+    let res = await fetch(`http://localhost:8080/reimbursement/${reimbId.value}`, {
+        credentials: 'include',
+        method: 'GET'
+    });
+    let tbodyElement = document.querySelector("#searched-reimb tbody");
+    tbodyElement.innerHTML = '';
+    let searchedArray =  await res.json();
+
+        let tr = document.createElement('tr');
+
+        let tdReimbId = document.createElement('td');
+        tdReimbId.innerHTML = searchedArray.reimbId;
+
+        let tdReimbAmount = document.createElement('td');
+        tdReimbAmount.innerHTML = '$'+ searchedArray.reimbAmount;
+
+        let tdReimbSubmitted = document.createElement('td');
+        tdReimbSubmitted.innerHTML = searchedArray.reimbSubmitted;
+
+        let tdReimbResolved = document.createElement('td');
+        let tdReimbResolver = document.createElement('td');
+        if (searchedArray.reimbResolved != null) {
+        tdReimbResolved.innerHTML = searchedArray.reimbResolved;
+        tdReimbResolver.innerHTML = searchedArray.reimbResolver;
+        } else {
+            tdReimbResolved.innerHTML = 'Not Yet Resolved'
+            tdReimbResolver.innerHTML = "No Resolver Yet"
+        }
+
+        let tdReimbStatus = document.createElement('td');
+        tdReimbStatus.innerHTML = searchedArray.reimbStatus;
+
+        let tdReimbType = document.createElement('td');
+        tdReimbType.innerHTML = searchedArray.reimbType;
+
+        let tdReimbDescription = document.createElement('td');
+        tdReimbDescription.innerHTML = searchedArray.reimbDescription;
+
+        let tdReimbAuthor = document.createElement('td');
+        tdReimbAuthor.innerHTML = searchedArray.reimbAuthor;
+
+        let tdViewReceipt = document.createElement('td');
+        let viewImageButton = document.createElement('button');
+        viewImageButton.innerHTML = 'View Receipt';
+        viewImageButton.className = "button is-link"
+        tdViewReceipt.appendChild(viewImageButton);
+
+        viewImageButton.addEventListener('click', () => {
+            let viewReceiptModal = document.querySelector('#view-receipt-modal');
+            approveOrRejectModal.classList.remove('is-active');
+
+            let modalCloseElement = viewReceiptModal.querySelector('button');
+            modalCloseElement.addEventListener('click', () => {
+                viewReceiptModal.classList.remove('is-active');
+                approveOrRejectModal.classList.add('is-active');
+            });
+
+            let modalContentElement = viewReceiptModal.querySelector('.modal-content');
+            modalContentElement.innerHTML = '';
+
+            let imageElement = document.createElement('img');
+            imageElement.setAttribute('src', `http://localhost:8080/reimbursements/${searchedArray.reimbId}/customerReceipt`);
+            modalContentElement.appendChild(imageElement);
+
+            viewReceiptModal.classList.add('is-active');
+
+        });
+
+        tr.appendChild(tdReimbId);
+        tr.appendChild(tdReimbAmount);
+        tr.appendChild(tdReimbSubmitted);
+        tr.appendChild(tdReimbResolved);
+        tr.appendChild(tdReimbStatus);
+        tr.appendChild(tdReimbType);
+        tr.appendChild(tdReimbDescription);
+        tr.appendChild(tdReimbAuthor);
+        tr.appendChild(tdReimbResolver);
+        tr.appendChild(tdViewReceipt);
+
+        tbodyElement.appendChild(tr);
+  });
+
+  //localhost:8080/reimbursements/1/update/
+  let approveOrRejectButton = document.querySelector('#approve-reject-reimbursement');
+  approveOrRejectButton.addEventListener('click', async () => {
+
+    let selectApproveOrReject = document.querySelector('#approved-rejected');
+    let value = selectApproveOrReject.options[selectApproveOrReject.selectedIndex].value;
+
+    let formData = new FormData();
+    formData.append('reimbStatus', value);
+
+    let res = await fetch(`http://localhost:8080/reimbursements/${reimbId.value}/update`,{
+        method: 'PATCH',
+        credentials: 'include',
+        body: formData
+    });
+    if (res.status === 201) {
+        populateTableWithReimbursements();
+    }
+  });
