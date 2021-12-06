@@ -19,6 +19,10 @@ import com.revature.models.Users;
 public class UsersService {
 
 	UsersDAO userDao;
+	
+	public UsersService(UsersDAO userDao) {
+		this.userDao = userDao;
+	}
 
 	public UsersService() {
 		this.userDao = new UsersDAO();

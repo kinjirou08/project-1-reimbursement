@@ -1,6 +1,7 @@
 window.addEventListener('load', checkLoginStatus);
 
 async function checkLoginStatus() {
+    console.log(1 + 3 + "Hello" + 4 + 7);
     let res = await fetch('http://localhost:8080/loginStatus', {
         method: 'GET',
         credentials: 'include'
@@ -10,8 +11,10 @@ async function checkLoginStatus() {
 
         if (userObj.ersRole === 'Employee') {
             window.location.href = 'employee-home.html';
-        }
+        } else  if (userObj.ersRole === 'Finance Manager') {
+            window.location.href = 'finance-manager-home.html';
     }
+}
 }
 
 let loginButton = document.querySelector('#loginBtn');
