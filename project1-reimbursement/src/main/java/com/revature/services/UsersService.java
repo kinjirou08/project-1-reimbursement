@@ -20,7 +20,7 @@ import com.revature.models.Users;
 public class UsersService {
 
 	UsersDAO userDao;
-	
+
 	public UsersService(UsersDAO userDao) {
 		this.userDao = userDao;
 	}
@@ -37,7 +37,7 @@ public class UsersService {
 		if (user == null) {
 			throw new FailedLoginException("Incorrect username and/or password!");
 		}
-		
+
 		return user;
 	}
 
@@ -47,8 +47,6 @@ public class UsersService {
 	}
 
 	public List<Reimbursement> getAllReimbursementById(Users user) throws SQLException {
-		
-		
 
 		return this.userDao.selectAllReimbursementsById(user.getErsUserId());
 
@@ -85,65 +83,66 @@ public class UsersService {
 
 		Reimbursement checkResolverId = this.userDao.selectReimbursementById(id);
 
-		InputStream receipt = this.userDao.selectReceiptFromReimbursementById(id, currentlyLoggedInUser.getErsUserId());
-		
-		if (receipt == null) {
-			throw new ReceiptNotFoundException("Receipt was not found for reimbursement id " + id);
-		}
-		
-		if(checkResolverId == null) {
-			throw new ReimbursementNotFoundExcpetion("There is no exisiting Reimbursement with the id of " +id);
+		if (checkResolverId == null) {
+			throw new ReimbursementNotFoundExcpetion("There is no exisiting Reimbursement with the id of " + id);
 		}
 
 		if (currentlyLoggedInUser.getErsUserId() != checkResolverId.getReimbResolver()) {
 			throw new UnauthorizedException("This Receipt belongs to another Finance Manager!");
 		}
 
-		
+		InputStream receipt = this.userDao.selectReceiptFromReimbursementById(id, currentlyLoggedInUser.getErsUserId());
+
+		if (receipt == null) {
+			throw new ReceiptNotFoundException("Receipt was not found for reimbursement id " + id);
+		}
 
 		return receipt;
 	}
 
-	public InputStream getCustomerReceiptFromReimbursementById(Users user, String reimbId) throws SQLException, UnauthorizedException, ReceiptNotFoundException {
+	public InputStream getCustomerReceiptFromReimbursementById(Users user, String reimbId)
+			throws SQLException, UnauthorizedException, ReceiptNotFoundException {
 
 		try {
-			
+
 			int id = Integer.parseInt(reimbId);
 			int userId = user.getErsUserId();
 
-			InputStream receipt = this.userDao.selectCustomerReceiptFromReimbursementById(id);
-
-			if (receipt == null) {
-				throw new ReceiptNotFoundException("Receipt was not found for reimbursement id " + id);
-			}
-			
 			if (user.getErsRole().equals("Employee")) {
-							
-				List<Reimbursement> reimbursementsThatBelongsToEmployee = this.userDao.selectAllReimbursementsById(userId);
+
+				List<Reimbursement> reimbursementsThatBelongsToEmployee = this.userDao
+						.selectAllReimbursementsById(userId);
 				Set<Integer> reimbursementIdsEncountered = new HashSet<>();
 				for (Reimbursement r : reimbursementsThatBelongsToEmployee) {
 					reimbursementIdsEncountered.add(r.getReimbId());
 				}
-							
+
 				if (!reimbursementIdsEncountered.contains(id)) {
-					throw new UnauthorizedException("You cannot access the images of reimbursements that do not belong to yourself");
+					throw new UnauthorizedException(
+							"You cannot access the images of reimbursements that do not belong to yourself");
 				}
-				
+
 			} else if (user.getErsRole().equals("Finance Manager")) {
-				
+
 				List<Reimbursement> reimbursementsThatBelongsToManager = this.userDao.selectAllReimbursements();
 				Set<Integer> reimbursementIdsEncountered = new HashSet<>();
 				for (Reimbursement r : reimbursementsThatBelongsToManager) {
 					reimbursementIdsEncountered.add(r.getReimbId());
 				}
-							
+
 				if (!reimbursementIdsEncountered.contains(id)) {
-					throw new UnauthorizedException("You cannot access the images of reimbursements that do not belong to yourself");
+					throw new UnauthorizedException(
+							"You cannot access the images of reimbursements that do not belong to yourself");
 				}
 			}
-	
-		return receipt;
-		
+			InputStream receipt = this.userDao.selectCustomerReceiptFromReimbursementById(id);
+
+			if (receipt == null) {
+				throw new ReceiptNotFoundException("Receipt was not found for reimbursement id " + id);
+			}
+
+			return receipt;
+
 		} catch (NumberFormatException e) {
 			throw new InvalidParameterException("Reimbursement id supplied must be an int");
 		}
@@ -234,20 +233,19 @@ public class UsersService {
 	}
 
 	public Reimbursement getAReimbursementById(String reimbId) throws SQLException, ReimbursementNotFoundExcpetion {
-		
+
 		try {
 			int rId = Integer.parseInt(reimbId);
-			
+
 			if (userDao.selectReimbursementById(rId) == null) {
-				throw new ReimbursementNotFoundExcpetion("There is no exisiting Reimbursement with the id of " +rId);
-			}		
+				throw new ReimbursementNotFoundExcpetion("There is no exisiting Reimbursement with the id of " + rId);
+			}
 			return this.userDao.selectReimbursementById(rId);
-			
+
 		} catch (NumberFormatException e) {
 			throw new InvalidParameterException("Reimbursement id supplied must be an int");
 		}
-		
-		
+
 	}
 
 }
