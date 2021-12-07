@@ -169,6 +169,10 @@ public class UsersService {
 		if (newUser.getErsEmail().trim().equals("")) {
 			throw new InvalidParameterException("Email field must not be empty!");
 		}
+		
+		if (newUser.getErsRole().trim().equals("")) {
+			throw new InvalidParameterException("Email field must not be empty!");
+		}
 
 		Set<String> validErsRole = new HashSet<>();
 		validErsRole.add("Finance Manager");

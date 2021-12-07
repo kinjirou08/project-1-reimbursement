@@ -1,7 +1,6 @@
 window.addEventListener('load', checkLoginStatus);
 
 async function checkLoginStatus() {
-    console.log(1 + 3 + "Hello" + 4 + 7);
     let res = await fetch('http://localhost:8080/loginStatus', {
         method: 'GET',
         credentials: 'include'
