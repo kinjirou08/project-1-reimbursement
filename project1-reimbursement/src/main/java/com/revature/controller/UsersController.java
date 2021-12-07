@@ -63,7 +63,7 @@ public class UsersController implements MapEndpoints {
 		
 		String reimbId = ctx.pathParam("reimb_id");	
 		Reimbursement r = this.userService.getAReimbursementById(reimbId);
-		
+		System.out.println(reimbId);
 		ctx.json(r);
 		
 	};

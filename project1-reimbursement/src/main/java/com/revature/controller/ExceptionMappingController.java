@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import javax.security.auth.login.FailedLoginException;
 
 import com.revature.dto.ExceptionMessageDTO;
+import com.revature.exceptions.ReceiptNotFoundException;
 import com.revature.exceptions.ReimbursementNotFoundExcpetion;
 import com.revature.exceptions.UnauthorizedException;
 
@@ -35,6 +36,11 @@ public class ExceptionMappingController {
 		});
 		
 		app.exception(FailedLoginException.class, (e, ctx) -> {
+			ctx.status(400);
+			ctx.json(new ExceptionMessageDTO(e.getMessage()));
+		});
+		
+		app.exception(ReceiptNotFoundException.class, (e, ctx) -> {
 			ctx.status(400);
 			ctx.json(new ExceptionMessageDTO(e.getMessage()));
 		});

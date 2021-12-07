@@ -130,7 +130,7 @@ public class UsersDAO {
 
 		try (Connection con = JDBCUtility.getConnection()) {
 
-			String sql = "SELECT * FROM ers_reimbursement WHERE fk_reimb_author = ? OR fk_reimb_resolver = ? ORDER BY reimb_id;";
+			String sql = "SELECT * FROM ers_reimbursement WHERE fk_reimb_author = ? ORDER BY reimb_id;";
 			ps = con.prepareStatement(sql);
 
 			ps.setInt(1, id);

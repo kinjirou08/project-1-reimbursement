@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.revature.dao.UsersDAO;
+import com.revature.exceptions.ReceiptNotFoundException;
 import com.revature.exceptions.ReimbursementNotFoundExcpetion;
 import com.revature.exceptions.UnauthorizedException;
 import com.revature.models.Reimbursement;
@@ -29,8 +30,7 @@ public class UsersServiceTest {
 
 	private UsersService usersService;
 	UsersDAO mockUsersDao;
-	private Users user;
-
+	
 	@BeforeEach
 	public void setUp() {
 		this.usersService = new UsersService();
@@ -222,7 +222,7 @@ public class UsersServiceTest {
 	 */
 	
 	@Test //Happy Path
-	void getReceiptFromReimbursementById_PostiveTest() throws SQLException, UnauthorizedException, ReimbursementNotFoundExcpetion {
+	void getReceiptFromReimbursementById_PostiveTest() throws SQLException, UnauthorizedException, ReimbursementNotFoundExcpetion, ReceiptNotFoundException {
 		
 		Users user = new Users(1, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
 				"Finance Manager");
@@ -278,19 +278,150 @@ public class UsersServiceTest {
 	@Test // Sad Path
 	void getReceiptFromReimbursementById_NegativeTest_ReceiptDoesNotExist() throws SQLException {
 		
-		//InvalidParameterException
+		//ReceiptNotFoundExcpetion
 		Users user = new Users(1, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
 				"Finance Manager");
 		Reimbursement checkReimb = new Reimbursement(1, 100.50, "2021-12-05 14:27:58", "2021-12-05 14:27:58", "Approved", "Lodging",
 				"Duplicate Room rental", 3, 1);
+		
 		when(mockUsersDao.selectReimbursementById(eq(1))).thenReturn(checkReimb);
 		usersService = new UsersService(mockUsersDao);
 		
-		//InputStream receipt = null;
+		when(mockUsersDao.selectReceiptFromReimbursementById(2, 1)).thenReturn(null);
 		
-		Assertions.assertThrows(InvalidParameterException.class, () -> {
-			usersService.getReceiptFromReimbursementById(user, "1");
+		Assertions.assertThrows(ReceiptNotFoundException.class, () -> {
+			usersService.getReceiptFromReimbursementById(user, "2");
 		});
 		
 	}
+	
+	/*
+	 * getCustomerReceiptFromReimbursementById() test
+	 */
+	
+	@Test //Happy Path -- need to be reviewed
+	void getCustomerReceiptFromReimbursementById_PostiveTest() throws SQLException, UnauthorizedException, ReimbursementNotFoundExcpetion, ReceiptNotFoundException {
+		
+		Users user = new Users(1, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Finance Manager");
+		
+		Reimbursement firstReimb = new Reimbursement(1, 100.50, "2021-12-05 14:27:58", null, "Pending", "Lodging",
+				"Duplicate Room rental", 1, 0);
+		Reimbursement secondReimb = new Reimbursement(2, 12.50, "2021-12-05 14:28:24", "2021-12-05 14:29:22",
+				"Approved", "Food", "Spoiled Food", 1, 3);
+
+		List<Reimbursement> reimbursementsThatBelongsToManager = new ArrayList<>();
+		reimbursementsThatBelongsToManager.add(firstReimb);
+		reimbursementsThatBelongsToManager.add(secondReimb);
+		
+		 //this.userDao.selectAllReimbursements();
+		when(mockUsersDao.selectAllReimbursements()).thenReturn(reimbursementsThatBelongsToManager);
+		
+		InputStream receipt = new ByteArrayInputStream("test data".getBytes());
+		when(mockUsersDao.selectCustomerReceiptFromReimbursementById(eq(1))).thenReturn(receipt);
+			
+		usersService = new UsersService(mockUsersDao);
+		
+		InputStream actual = usersService.getCustomerReceiptFromReimbursementById(user, "1");
+		
+		InputStream expected = receipt;
+		Assertions.assertEquals(expected, actual);	
+	}
+	
+	@Test //Sad Path
+	void getCustomerReceiptFromReimbursementById_NegativeTest_UserNotAnEmployee() {
+		
+		Users user = new Users(2, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Finance Manager");
+		
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertFalse(user.getErsRole().equals("Employee"));	
+	}
+	
+	@Test //Sad Path
+	void getCustomerReceiptFromReimbursementById_NegativeTest_UserNotAFinanceManager() {
+		
+		Users user = new Users(2, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Employee");
+		
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertFalse(user.getErsRole().equals("Finance Manager"));	
+	}
+	
+	@Test //Sad Path
+	void getCustomerReceiptFromReimbursementById_NegativeTest_InvalidReimbId() {
+		
+		Users user = new Users(2, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Employee");
+		
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(InvalidParameterException.class, () -> {
+			usersService.getCustomerReceiptFromReimbursementById(user, "string");
+		});
+	}
+	
+	@Test //Sad Path
+	void getCustomerReceiptFromReimbursementById_NegativeTest_ReceiptDoesNotExist() throws SQLException {
+		
+		Users user = new Users(1, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Finance Manager");
+		
+		when(mockUsersDao.selectCustomerReceiptFromReimbursementById(1)).thenReturn(null);
+		
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(ReceiptNotFoundException.class, () -> {
+			usersService.getCustomerReceiptFromReimbursementById(user,"1");
+		});
+	}
+	
+	@Test //Sad Path
+	void getCustomerReceiptFromReimbursementById_NegativeTest_ReceiptBelongsToAnotherEmployee() throws SQLException {
+		
+		Users user = new Users(2, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Employee");
+		
+		Reimbursement firstReimb = new Reimbursement(1, 100.50, "2021-12-05 14:27:58", null, "Pending", "Lodging",
+				"Duplicate Room rental", 2, 0);
+		Reimbursement secondReimb = new Reimbursement(2, 12.50, "2021-12-05 14:28:24", "2021-12-05 14:29:22",
+				"Approved", "Food", "Spoiled Food", 2, 1);
+		
+		List<Reimbursement> reimbursementsThatBelongsToEmployee = new ArrayList<>();
+		reimbursementsThatBelongsToEmployee.add(firstReimb);
+		reimbursementsThatBelongsToEmployee.add(secondReimb);
+		when(mockUsersDao.selectAllReimbursementsById(eq(user.getErsUserId()))).thenReturn(reimbursementsThatBelongsToEmployee);
+		
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(UnauthorizedException.class, () -> {
+			usersService.getCustomerReceiptFromReimbursementById(user, "3");
+		});	
+	}
+	
+	@Test //Sad Path
+	void getCustomerReceiptFromReimbursementById_NegativeTest_ReceiptBelongsToAnotherFinanceManager() throws SQLException {
+		
+		Users user = new Users(10, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Finance Manager");
+		
+		Reimbursement firstReimb = new Reimbursement(15, 100.50, "2021-12-05 14:27:58", null, "Pending", "Lodging",
+				"Duplicate Room rental", 2, 0);
+		Reimbursement secondReimb = new Reimbursement(26, 12.50, "2021-12-05 14:28:24", "2021-12-05 14:29:22",
+				"Approved", "Food", "Spoiled Food", 2, 1);
+		
+		List<Reimbursement> reimbursementsThatBelongsToFinanceManager = new ArrayList<>();
+		reimbursementsThatBelongsToFinanceManager.add(firstReimb);
+		reimbursementsThatBelongsToFinanceManager.add(secondReimb);
+		when(mockUsersDao.selectAllReimbursements()).thenReturn(reimbursementsThatBelongsToFinanceManager);
+		
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(UnauthorizedException.class, () -> {
+			usersService.getCustomerReceiptFromReimbursementById(user, "3");
+		});	
+	}
+	
 }
