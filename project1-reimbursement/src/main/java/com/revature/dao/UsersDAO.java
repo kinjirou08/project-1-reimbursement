@@ -134,7 +134,6 @@ public class UsersDAO {
 			ps = con.prepareStatement(sql);
 
 			ps.setInt(1, id);
-			ps.setInt(2, id);
 
 			ResultSet rs = ps.executeQuery();
 

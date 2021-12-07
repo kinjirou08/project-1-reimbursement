@@ -300,7 +300,7 @@ public class UsersServiceTest {
 	 * getCustomerReceiptFromReimbursementById() test
 	 */
 	
-	@Test //Happy Path -- need to be reviewed
+	@Test //Happy Path 
 	void getCustomerReceiptFromReimbursementById_PostiveTest() throws SQLException, UnauthorizedException, ReimbursementNotFoundExcpetion, ReceiptNotFoundException {
 		
 		Users user = new Users(1, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
@@ -399,7 +399,7 @@ public class UsersServiceTest {
 		List<Reimbursement> reimbursementsThatBelongsToEmployee = new ArrayList<>();
 		reimbursementsThatBelongsToEmployee.add(firstReimb);
 		reimbursementsThatBelongsToEmployee.add(secondReimb);
-		when(mockUsersDao.selectAllReimbursementsById(eq(user.getErsUserId()))).thenReturn(reimbursementsThatBelongsToEmployee);
+		when(mockUsersDao.selectAllReimbursementsById(2)).thenReturn(reimbursementsThatBelongsToEmployee);
 		
 		usersService = new UsersService(mockUsersDao);
 		
@@ -411,7 +411,7 @@ public class UsersServiceTest {
 	@Test //Sad Path
 	void getCustomerReceiptFromReimbursementById_NegativeTest_ReceiptBelongsToAnotherFinanceManager() throws SQLException {
 		
-		Users user = new Users(10, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+		Users user = new Users(2, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
 				"Finance Manager");
 		
 		Reimbursement firstReimb = new Reimbursement(15, 100.50, "2021-12-05 14:27:58", null, "Pending", "Lodging",
