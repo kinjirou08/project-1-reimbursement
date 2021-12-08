@@ -7,7 +7,6 @@ window.addEventListener('load', async () => {
     });
     if (res.status === 200) {
         let userObj = await res.json();
-
             if (userObj.ersRole === 'Finance Manager') {
                 window.location.href = 'finance-manager-home.html';
             } else if (res.status === 401) {

@@ -545,13 +545,12 @@ class UsersServiceTest {
 			usersService.newUser(newUser);
 		});
 	}
-	
 	/*
 	 * getAllReimbursementByStatus() test
 	 */
 
 	@Test // Happy Path
-	void getAllReimbursementByStatus_PostiveTest () throws SQLException {
+	void getAllReimbursementByStatus_PostiveTest_AllPending() throws SQLException {
 		
 		Reimbursement firstReimb = new Reimbursement(1, 100.50, "2021-12-05 14:27:58", null, "Pending", "Lodging",
 				"Duplicate Room rental", 2, 0);
@@ -577,5 +576,185 @@ class UsersServiceTest {
 				"Spoiled", 2, 0));
 		
 		Assertions.assertEquals(expected, actual);
+	}
+	
+	@Test // Sad Path
+	void getAllReimbursementByStatus_NegativeTest_StatusIsInvalid() {
+		
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(InvalidParameterException.class, () -> {
+			usersService.getAllReimbursementByStatus("Pendding");
+		});
+	}
+
+	/*
+	 * newReimbursement() test
+	 */
+	
+	@Test // Happy Path
+	
+	void newReimbursement_PositiveTest_AllFieldsValid() throws SQLException {
+		
+		Users user = new Users(1, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Employee");	
+		Reimbursement newReimb = new Reimbursement(1, 100.50, "2021-12-05 14:27:58", null, "Pending", "Lodging",
+				"Duplicate Room rental", 2, 0);
+		
+		InputStream receipt = new ByteArrayInputStream("test data".getBytes());
+		
+		when(mockUsersDao.insertNewReimbursement(user.getErsUserId(), 100.50, "Lodging", "Duplicate Room rental", receipt))
+		.thenReturn(newReimb);
+		
+		usersService = new UsersService(mockUsersDao);
+		
+		Reimbursement actual = usersService.newReimbursement(user, "100.50", "Lodging", "Duplicate Room rental", "image/jpeg", receipt);
+		
+		Reimbursement expected = new Reimbursement(1, 100.50, "2021-12-05 14:27:58", null, "Pending", "Lodging",
+				"Duplicate Room rental", 2, 0);
+		
+		Assertions.assertEquals(expected, actual);	
+	}
+	
+	@Test // Sad Path
+	void newReimbursement_NegativeTest_AmountIsZero_AllFieldsValid() {
+		//InvalidParameterException
+		
+		Users user = new Users(1, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Employee");	
+		InputStream receipt = new ByteArrayInputStream("test data".getBytes());
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(InvalidParameterException.class, () -> {
+			usersService.newReimbursement(user, "0", "Lodging", "Duplicate Room rental", "image/jpeg", receipt);
+		});	
+	}
+	
+	@Test // Sad Path
+	void newReimbursement_NegativeTest_AmountIsNegativeNumber_AllFieldsValid() {
+		//InvalidParameterException
+		
+		Users user = new Users(1, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Employee");	
+		InputStream receipt = new ByteArrayInputStream("test data".getBytes());
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(InvalidParameterException.class, () -> {
+			usersService.newReimbursement(user, "-1", "Lodging", "Duplicate Room rental", "image/jpeg", receipt);
+		});	
+	}
+	
+	@Test // Sad Path
+	void newReimbursement_NegativeTest_AmountIsEmpty_AllFieldsValid() {
+		//InvalidParameterException
+		
+		Users user = new Users(1, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Employee");	
+		InputStream receipt = new ByteArrayInputStream("test data".getBytes());
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(InvalidParameterException.class, () -> {
+			usersService.newReimbursement(user, "", "Lodging", "Duplicate Room rental", "image/jpeg", receipt);
+		});	
+	}
+	
+	@Test // Sad Path
+	void newReimbursement_NegativeTest_MimeTypeIsInvalid_AllFieldsValid() {
+		//InvalidParameterException
+		
+		Users user = new Users(1, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Employee");	
+		InputStream receipt = new ByteArrayInputStream("test data".getBytes());
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(InvalidParameterException.class, () -> {
+			usersService.newReimbursement(user, "100.50", "Lodging", "Duplicate Room rental", "text/html", receipt);
+		});	
+	}
+	
+	@Test // Sad Path
+	void newReimbursement_NegativeTest_reimbTypeIsInvalid_AllFieldsValid() {
+		//InvalidParameterException
+		//reimbType must be only Food, Lodging, Travel, Other
+		
+		Users user = new Users(1, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Employee");	
+		InputStream receipt = new ByteArrayInputStream("test data".getBytes());
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(InvalidParameterException.class, () -> {
+			usersService.newReimbursement(user, "100.50", "Nani", "Duplicate Room rental", "image/jpeg", receipt);
+		});	
+	}
+	
+	@Test // Sad Path
+	void newReimbursement_NegativeTest_reimbTypeIsEmpty_AllFieldsValid() {
+		//InvalidParameterException
+		//reimbType must be only Food, Lodging, Travel, Other
+		
+		Users user = new Users(1, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Employee");	
+		InputStream receipt = new ByteArrayInputStream("test data".getBytes());
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(InvalidParameterException.class, () -> {
+			usersService.newReimbursement(user, "100.50", "", "Duplicate Room rental", "image/jpeg", receipt);
+		});	
+	}
+	
+	@Test // Sad Path
+	void newReimbursement_NegativeTest_reimbDescriptionIsEmpty_AllFieldsValid() {
+		//InvalidParameterException
+		
+		Users user = new Users(1, "jymm.enriquez", "p4ssw0rd", "Jymm", "Enriquez", "jymm.enriquez@revature.net",
+				"Employee");	
+		InputStream receipt = new ByteArrayInputStream("test data".getBytes());
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(InvalidParameterException.class, () -> {
+			usersService.newReimbursement(user, "100.50", "Food", "", "image/jpeg", receipt);
+		});	
+	}
+	
+	/*
+	 * getAReimbursementById() test
+	 */
+	
+	@Test // Happy Path
+	void getAReimbursementById_PositiveTest() throws SQLException, ReimbursementNotFoundExcpetion {
+		
+		Reimbursement newReimb = new Reimbursement(1, 100.50, "2021-12-05 14:27:58", null, "Pending", "Lodging",
+				"Duplicate Room rental", 2, 0);
+		
+		when(mockUsersDao.selectReimbursementById(1)).thenReturn(newReimb);
+		
+		usersService = new UsersService(mockUsersDao);
+		
+		Reimbursement actual = usersService.getAReimbursementById("1");
+		
+		Reimbursement expected = new Reimbursement(1, 100.50, "2021-12-05 14:27:58", null, "Pending", "Lodging",
+				"Duplicate Room rental", 2, 0);
+		
+		Assertions.assertEquals(expected, actual);	
+	}
+	
+	@Test // Sad Path
+	void getAReimbursementById_NegativeTest_IdIsNotAnInteger() {
+		
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(InvalidParameterException.class, () -> {
+			usersService.getAReimbursementById("String");
+		});
+	}
+
+	@Test // Sad Path
+	void getAReimbursementById_NegativeTest_ReimbursementNotFound() {
+		
+		usersService = new UsersService(mockUsersDao);
+		
+		Assertions.assertThrows(ReimbursementNotFoundExcpetion.class, () -> {
+			usersService.getAReimbursementById("1");
+		});
 	}
 }

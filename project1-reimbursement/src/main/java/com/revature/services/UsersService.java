@@ -202,9 +202,13 @@ public class UsersService {
 
 	public Reimbursement newReimbursement(Users user, String reimbAmount, String reimbType, String reimbDescription,
 			String mimeType, InputStream content) throws SQLException {
+	
+		if (reimbAmount.trim().equals("")) {
+			throw new InvalidParameterException("Reimbursement Amount cannot be Empty!");
+		}
 
-		if (Double.parseDouble(reimbAmount) == 0) {
-			throw new InvalidParameterException("Reimbursement Amount cannot be empty and/or Zero!");
+		if (Double.parseDouble(reimbAmount) <= 0) {
+			throw new InvalidParameterException("Reimbursement Amount cannot be Less than zero or Zero!");
 		}
 
 		Set<String> validReimbType = new HashSet<>();
@@ -221,7 +225,9 @@ public class UsersService {
 		if (!allowedFileTypes.contains(mimeType)) {
 			throw new InvalidParameterException("When adding an assignment image, only PNG, JPEG, or GIF are allowed");
 		}
-
+		if (reimbType.trim().equals("")) {
+			throw new InvalidParameterException("Reimbursement Type cannot be empty!");
+		}
 		if (!validReimbType.contains(reimbType)) {
 			throw new InvalidParameterException("Reimbursement Type can only be: Food, Lodging, Travel, or Other");
 		}
