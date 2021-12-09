@@ -36,10 +36,10 @@
                       <label class="label" >Reimbursement Type</label>
                           <div class="select is-fullwidth is-info" >
                               <select id = "reimb-type" style = "background-color: #e3e3e3ab;">
-                              <option>Food</option>
-                              <option>Lodging</option>
-                              <option>Travel</option>
-                              <option>Other</option>
+                              <option value = "1">Food</option>
+                              <option value = "2">Lodging</option>
+                              <option value = "3">Travel</option>
+                              <option value = "4">Other</option>
                               </select>
                           </div>
                   </div>
@@ -72,7 +72,7 @@
             <div class="field">
               <div class="file is-info has-name is-fullwidth" id = "reim-receipt">
                 <label class="file-label">
-                  <input class="file-input" type="file" name="resume">
+                  <input class="file-input" type="file" name="resume" id ="upload-receipt">
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
@@ -93,6 +93,8 @@
       <footer class="modal-card-foot">
         <button class="button is-success" id = "sumbit-reimbursement">Submit</button>
         <button class="button" id = "cancel-reimbursement-v2">Cancel</button>
+        <div id = "message">
+        </div>
       </footer>
     </div>
   </div>
@@ -101,7 +103,7 @@
     <div class="navbar-brand">
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link" style= " font-size: 1.08rem;">
-            Welcome Employee!
+            <p>Welcome Employee!</p>
         </a>
         <div class="navbar-dropdown" id = "select-options">
           <a class="navbar-item" id = "add-reimbursement">

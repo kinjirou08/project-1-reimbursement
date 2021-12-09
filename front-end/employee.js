@@ -152,7 +152,7 @@ submitReimbursementButton.addEventListener('click', addReimbursement);
 async function addReimbursement () {
 
     let reimbTypeInput = document.querySelector('#reimb-type');
-    let value = reimbTypeInput.options[reimbTypeInput.selectedIndex].value;
+    let value = reimbTypeInput.options[reimbTypeInput.selectedIndex].textContent;
 
     let reimbDescription = document.querySelector('#reimb-description');
     let reimbAmount = document.querySelector('#reimb-amount');
@@ -171,8 +171,33 @@ async function addReimbursement () {
         body: formData
     });
 
+    let data = await res.json();
+
     if (res.status === 201) {
+        let successMessage = document.createElement('p');
+        let employeeDiv = document.querySelector('#message');
+        employeeDiv.innerHTML = '';
+
+        successMessage.innerHTML = data.message;
+        successMessage.style.color = '#00d1b2';
+        successMessage.style.textAlign = 'center';
+        employeeDiv.appendChild(successMessage);
+
         populateTableWithReimbursements();
+
+    }
+
+    if (res.status === 400) {
+
+        let errorMessage = document.createElement('p');
+        let employeeDiv = document.querySelector('#message');
+        employeeDiv.innerHTML = '';
+
+        errorMessage.innerHTML = data.message;
+        errorMessage.style.color = '#f14668';
+        errorMessage.style.textAlign = 'center';
+        employeeDiv.appendChild(errorMessage);
+
     }
 }
 

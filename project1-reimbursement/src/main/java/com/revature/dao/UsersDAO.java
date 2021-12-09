@@ -174,7 +174,6 @@ public class UsersDAO {
 
 	public Reimbursement updateReimbursement(int reimbAuthor, int reimbId, Reimbursement getReimbursementById,
 			String reimbStatus) throws SQLException, IOException {
-
 		try (Connection con = JDBCUtility.getConnection()) {
 
 			String sql = "UPDATE ers_reimbursement\r\n"
@@ -184,20 +183,17 @@ public class UsersDAO {
 			ps.setInt(1, reimbAuthor);
 			ps.setString(2, reimbStatus);
 			ps.setInt(3, reimbId);
-
+			
 			ps.executeUpdate();
 
-			getReimbursementById = selectReimbursementById(reimbId);
+			Reimbursement updatedReimbursement = selectReimbursementById(reimbId);
 
 			InputStream receipt = ReceiptMaker.makeReceipt(getReimbursementById);
 
 			updateReceipt(reimbId, receipt);
-
-			return new Reimbursement(reimbId, getReimbursementById.getReimbAmount(),
-					getReimbursementById.getReimbSubmitted(), getReimbursementById.getReimbResolved(), reimbStatus,
-					getReimbursementById.getReimbType(), getReimbursementById.getReimbDescription(),
-					getReimbursementById.getReimbAuthor(), reimbAuthor);
 			
+			return updatedReimbursement;
+
 		} finally {
 			ps.close();
 		}
