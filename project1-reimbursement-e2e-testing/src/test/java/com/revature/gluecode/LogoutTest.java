@@ -23,9 +23,20 @@ public class LogoutTest {
 		System.setProperty("webdriver.chrome.driver", "C:/webdrivers/chromedriver.exe");
 
 		this.driver = new ChromeDriver();
+		
+		this.driver.get("http://localhost:5500");
+		this.loginPage = new LoginPage(driver);
 
-		this.driver.get("http://localhost:5500/employee-home.html");
+		this.loginPage.getUsernameInput().sendKeys("employee01");
+		this.loginPage.getPasswordInput().sendKeys("password");
+		this.loginPage.getLoginBtn().click();
+		
 		this.employeePage = new EmployeePage(driver);
+		String expectedWelcomeHeadingText = "Welcome Employee!";
+		Assertions.assertEquals(expectedWelcomeHeadingText, this.employeePage.getWelcomeHeading().getText());
+		
+//		this.driver.get("http://localhost:5500/employee-home.html");
+//		this.employeePage = new EmployeePage(driver);
 	}
 	
 	@Given("Im at the Finance Manager Homepage")
@@ -34,13 +45,26 @@ public class LogoutTest {
 
 		this.driver = new ChromeDriver();
 
-		this.driver.get("http://localhost:5500/finance-manager-home.html");
-		this.employeePage = new EmployeePage(driver);
+		this.driver.get("http://localhost:5500");
+		this.loginPage = new LoginPage(driver);
+
+		this.loginPage.getUsernameInput().sendKeys("kinjirou08");
+		this.loginPage.getPasswordInput().sendKeys("p4ssw0rd");
+		this.loginPage.getLoginBtn().click();
+		
+		this.managerPage = new FinanceManagerPage(driver);
+		String expectedWelcomeHeadingText = "Welcome Manager!";
+		Assertions.assertEquals(expectedWelcomeHeadingText, this.managerPage.getWelcomeHeading().getText());
 	}
 
-	@Given("I cicked the Logout button")
+	@Given("I clicked the Logout button")
 	public void i_cicked_the_logout_button() {
 		this.employeePage.getLogoutBtn().click();
+	}
+	
+	@Given("I clicked the Finance Manager Logout button")
+	public void i_clicked_the_finance_manager_logout_button() {
+	    managerPage.getLogoutBtn().click();
 	}
 
 	@Then("I should be redirected to login page")

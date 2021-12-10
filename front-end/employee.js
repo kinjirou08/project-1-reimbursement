@@ -1,4 +1,5 @@
 // Initial page load
+let userObj;
 window.addEventListener('load', async () => {
 
     let res = await fetch('http://localhost:8080/loginStatus', {
@@ -6,15 +7,23 @@ window.addEventListener('load', async () => {
         credentials: 'include'
     });
     if (res.status === 200) {
-        let userObj = await res.json();
+        userObj = await res.json();
             if (userObj.ersRole === 'Finance Manager') {
                 window.location.href = 'finance-manager-home.html';
-            } else if (res.status === 401) {
-                window.location.href = 'index.html';
-        }
+            }
+        } else if (res.status === 401) {
+            window.location.href = 'index.html';
     }
+    localStorage.setItem('userObj', JSON.stringify(userObj));
     populateTableWithReimbursements();
+
+
 });
+let retrievedPerson = JSON.parse(localStorage.getItem('userObj'));
+
+
+
+
 
 let logoutBtn = document.querySelector('#logoutBtn');
 
@@ -75,7 +84,7 @@ async function populateTableWithReimbursements() {
         tdReimbDescription.innerHTML = reimbursement.reimbDescription;
 
         let tdReimbAuthor = document.createElement('td');
-        tdReimbAuthor.innerHTML = reimbursement.reimbAuthor;
+        tdReimbAuthor.innerHTML = `${reimbursement.reimbAuthor}-${retrievedPerson.ersFirstName} ${retrievedPerson.ersLastName}`;
 
         let tdViewReceipt = document.createElement('td');
         let viewImageButton = document.createElement('button');
@@ -178,10 +187,16 @@ async function addReimbursement () {
         let employeeDiv = document.querySelector('#message');
         employeeDiv.innerHTML = '';
 
-        successMessage.innerHTML = data.message;
+        successMessage.innerHTML = "You've successfully added a new reimbursement!"
         successMessage.style.color = '#00d1b2';
         successMessage.style.textAlign = 'center';
         employeeDiv.appendChild(successMessage);
+
+        reimbTypeInput.selectedIndex = 0;
+        reimbDescription.value = '';
+        reimbAmount.value = '';
+        let refreshFileName = document.querySelector('#reim-receipt .file-name');
+        refreshFileName.innerHTML = 'Receipt must be of JPEG/JPG, PNG, or GIF';
 
         populateTableWithReimbursements();
 

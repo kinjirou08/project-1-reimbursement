@@ -15,9 +15,9 @@ public class ActionClassDemo {
 
 		WebDriver driver = new ChromeDriver();
 
-		driver.get("http://localhost:5500/employee-home.html");
+		driver.get("http://localhost:5500/finance-manager-home.html");
 
-		WebElement hoverElement = driver.findElement(By.className("navbar-link"));
+		WebElement hoverElement = driver.findElement(By.xpath("//a[@class='navbar-link']"));
 		
 		Actions a = new Actions(driver);
 		a.moveToElement(hoverElement).build().perform(); // This will "move the mouse" to that element
@@ -25,36 +25,49 @@ public class ActionClassDemo {
 		Thread.sleep(5000);	
 		
 		Actions a2 = new Actions(driver);
-		a2.moveToElement(driver.findElement(By.id("add-reimbursement"))).click().build().perform();
+		a2.moveToElement(driver.findElement(By.xpath("//a[@id='approve-reject']"))).click().build().perform();
 		
 		Thread.sleep(5000);	
 		
-		WebElement dropDropBtn = (driver.findElement(By.id("reimb-type")));
-		dropDropBtn.click();
-		Select dropDownType = new Select (driver.findElement(By.id("reimb-type")));
-		dropDownType.selectByValue("3");
-		
-		Thread.sleep(2000);	
-		
-		WebElement reimbDescription = driver.findElement(By.id("reimb-description"));
-		reimbDescription.sendKeys("I'm automating inside the Selenium!");
+		WebElement reimId = driver.findElement(By.xpath("//input[@id='reimb-id']"));
+		reimId.sendKeys("3");
 		
 		Thread.sleep(2000);
 		
-		WebElement reimbAmount = driver.findElement(By.id("reimb-amount"));
-		reimbAmount.sendKeys("100.50");
+		WebElement searchBtn = (driver.findElement(By.xpath("//button[@id='search']")));
+		searchBtn.click();
+	
+		Thread.sleep(2000);
+		
+		WebElement dropDownBtn = (driver.findElement(By.xpath("//select[@id='approved-rejected']")));
+		dropDownBtn.click();
+		Select dropDownType = new Select (driver.findElement(By.xpath("//select[@id='approved-rejected']")));
+		dropDownType.selectByIndex(1);
+		
+		Thread.sleep(2000);
+	
+		WebElement submitBtn = driver.findElement(By.xpath("//button[@id='approve-reject-reimbursement']"));
+		submitBtn.click();
 		
 		Thread.sleep(2000);
 		
-		WebElement uploadReceipt = driver.findElement(By.id("upload-receipt"));
-		uploadReceipt.sendKeys("C:\\Users\\jymmm\\OneDrive\\Pictures\\Screenshots\\Screenshot (2).png");
+		WebElement cancelBtn = driver.findElement(By.xpath("//button[@id='cancel-reimbursementv4']"));
+		cancelBtn.click();
+		
+		
 		
 		Thread.sleep(2000);
 		
-		WebElement submitReimbursement = driver.findElement(By.id("sumbit-reimbursement"));
-		submitReimbursement.click();
-		
-		Thread.sleep(5000);	
+//		
+//		WebElement uploadReceipt = driver.findElement(By.id("upload-receipt"));
+//		uploadReceipt.sendKeys("C:\\Users\\jymmm\\OneDrive\\Pictures\\Screenshots\\Screenshot (2).png");
+//		
+//		Thread.sleep(2000);
+//		
+//		WebElement submitReimbursement = driver.findElement(By.id("sumbit-reimbursement"));
+//		submitReimbursement.click();
+//		
+//		Thread.sleep(5000);	
 		
 		driver.quit();
 

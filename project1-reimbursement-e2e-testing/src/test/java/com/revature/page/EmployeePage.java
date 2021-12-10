@@ -22,32 +22,35 @@ public class EmployeePage {
 	@FindBy(xpath= "//p[contains(text(),'Welcome Employee!')]")
 	private WebElement welcome;
 	
-	@FindBy(xpath = "//button[@id='logoutBtn']")
+	@FindBy(id="logoutBtn")
 	private WebElement logoutBtn;
 	
 	@FindBy(xpath = "//a[@class='navbar-link']")
-	WebElement hoverElement;
+	private WebElement hoverElement;
 	
 	@FindBy(xpath = "//a[@id='add-reimbursement']")
-	WebElement addReimbursementLink;
+	private WebElement addReimbursementLink;
 	
 	@FindBy(xpath = "//select[@id='reimb-type']")
-	Select dropDownType;
+	private Select dropDownType;
 	
 	@FindBy(xpath = "//select[@id='reimb-type']")
-	WebElement dropDownBtn;
+	private WebElement dropDownBtn;
 	
 	@FindBy(xpath = "//textarea[@id='reimb-description']")
-	WebElement reimbDescription;
+	private WebElement reimbDescription;
 	
 	@FindBy(xpath = "//input[@id='reimb-amount']")
-	WebElement reimbAmount;
+	private WebElement reimbAmount;
 	
 	@FindBy(xpath = "//input[@id='upload-receipt']")
-	WebElement uploadReceipt;
+	private WebElement uploadReceipt;
 	
 	@FindBy(xpath = "//button[@id='sumbit-reimbursement']")
-	WebElement submitBtn;
+	private WebElement submitBtn;
+	
+	@FindBy(xpath = "//button[@id='cancel-reimbursement-v2']")
+	private WebElement cancelBtn;
 	
 	public EmployeePage(WebDriver driver) {
 		this.driver = driver;	
@@ -91,6 +94,10 @@ public class EmployeePage {
 
 	public WebElement getLogoutBtn() {
 		return this.logoutBtn;
+	}
+	
+	public WebElement getCancelBtn() {
+		return this.cancelBtn;
 	}
 	
 	public Actions getAction() {

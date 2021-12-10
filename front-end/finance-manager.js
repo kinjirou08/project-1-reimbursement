@@ -11,9 +11,9 @@ window.addEventListener('load', async () => {
         let userObj = await res.json();
         if (userObj.ersRole === 'Employee') {
             window.location.href = 'employee-home.html';
-        } else if (res.status === 401) {
-            window.location.href = 'index.html';
         }
+    } else if (res.status === 401) {
+        window.location.href = 'index.html';
     }
     populateTableWithReimbursements();
 });
@@ -337,7 +337,22 @@ const fileInput = document.querySelector('#reim-receipt input[type=file]');
         credentials: 'include',
         body: formData
     });
-    if (res.status === 201) {
+    if (res.status === 200) {
+        let successMessage = document.createElement('p');
+        let fmDiv = document.querySelector('#fm-message');
+        fmDiv.innerHTML = '';
+
+        successMessage.innerHTML = "You've successfully added a new reimbursement!";
+        successMessage.style.color = '#00d1b2';
+        successMessage.style.textAlign = 'center';
+        fmDiv.appendChild(successMessage);
+
+        let tbodyElement = document.querySelector("#searched-reimb tbody");
+        tbodyElement.innerHTML = '';
+        selectApproveOrReject.selectedIndex = 0;
+        reimbId.value = '';
+
         populateTableWithReimbursements();
     }
+
   });

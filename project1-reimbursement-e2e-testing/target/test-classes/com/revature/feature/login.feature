@@ -23,5 +23,6 @@ Scenario Outline: Successful Finance Manager login
 		| username | password |
 		| "fm01" | "p4ssw0rd" |
 		| "kinjirou08" | "p4ssw0rd" |	
+
 		
 		
