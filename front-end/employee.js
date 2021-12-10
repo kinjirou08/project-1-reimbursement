@@ -14,12 +14,12 @@ window.addEventListener('load', async () => {
     } else if (res.status === 401) {
         window.location.href = 'index.html';
     }
-    localStorage.setItem('userObj', JSON.stringify(userObj));
+    //localStorage.setItem('userObj', JSON.stringify(userObj));
     populateTableWithReimbursements();
 
 
 });
-let retrievedPerson = JSON.parse(localStorage.getItem('userObj'));
+//let retrievedPerson = JSON.parse(localStorage.getItem('userObj'));
 
 
 
@@ -84,7 +84,7 @@ async function populateTableWithReimbursements() {
         tdReimbDescription.innerHTML = reimbursement.reimbDescription;
 
         let tdReimbAuthor = document.createElement('td');
-        tdReimbAuthor.innerHTML = `${reimbursement.reimbAuthor}-${retrievedPerson.ersFirstName} ${retrievedPerson.ersLastName}`;
+        tdReimbAuthor.innerHTML = reimbursement.reimbAuthor;
 
         let tdViewReceipt = document.createElement('td');
         let viewImageButton = document.createElement('button');
