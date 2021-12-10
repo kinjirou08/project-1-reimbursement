@@ -1,0 +1,36 @@
+10 Dec 2021 - 09:27:33.756 [main] INFO  io.javalin.Javalin - 
+       __                      __ _            __ __
+      / /____ _ _   __ ____ _ / /(_)____      / // /
+ __  / // __ `/| | / // __ `// // // __ \    / // /_
+/ /_/ // /_/ / | |/ // /_/ // // // / / /   /__  __/
+\____/ \__,_/  |___/ \__,_//_//_//_/ /_/      /_/
+
+          https://javalin.io/documentation
+
+10 Dec 2021 - 09:27:33.777 [main] INFO  org.eclipse.jetty.util.log - Logging initialized @607ms to org.eclipse.jetty.util.log.Slf4jLog
+10 Dec 2021 - 09:27:33.778 [main] INFO  io.javalin.Javalin - Starting Javalin ...
+10 Dec 2021 - 09:27:33.804 [main] INFO  io.javalin.Javalin - You are running Javalin 4.0.1 (released September 25, 2021. Your Javalin version is 76 days old. Consider upgrading!).
+10 Dec 2021 - 09:27:34.078 [main] INFO  io.javalin.Javalin - Listening on http://localhost:8080/
+10 Dec 2021 - 09:27:34.078 [main] INFO  io.javalin.Javalin - Javalin started in 300ms \o/
+10 Dec 2021 - 09:27:37.164 [qtp517254671-29] INFO  com.revature.app.MainDriver - POST request received to the /login endpoint
+10 Dec 2021 - 09:55:27.623 [qtp517254671-23] INFO  com.revature.app.MainDriver - POST request received to the /login endpoint
+10 Dec 2021 - 09:55:32.601 [qtp517254671-31] INFO  com.revature.app.MainDriver - POST request received to the /newReimbursement endpoint
+10 Dec 2021 - 09:55:57.608 [main] INFO  io.javalin.Javalin - 
+       __                      __ _            __ __
+      / /____ _ _   __ ____ _ / /(_)____      / // /
+ __  / // __ `/| | / // __ `// // // __ \    / // /_
+/ /_/ // /_/ / | |/ // /_/ // // // / / /   /__  __/
+\____/ \__,_/  |___/ \__,_//_//_//_/ /_/      /_/
+
+          https://javalin.io/documentation
+
+10 Dec 2021 - 09:55:57.630 [main] INFO  org.eclipse.jetty.util.log - Logging initialized @543ms to org.eclipse.jetty.util.log.Slf4jLog
+10 Dec 2021 - 09:55:57.631 [main] INFO  io.javalin.Javalin - Starting Javalin ...
+10 Dec 2021 - 09:55:57.652 [main] INFO  io.javalin.Javalin - You are running Javalin 4.0.1 (released September 25, 2021. Your Javalin version is 76 days old. Consider upgrading!).
+10 Dec 2021 - 09:55:57.932 [main] INFO  io.javalin.Javalin - Listening on http://localhost:8080/
+10 Dec 2021 - 09:55:57.932 [main] INFO  io.javalin.Javalin - Javalin started in 301ms \o/
+10 Dec 2021 - 09:56:01.790 [qtp517254671-29] INFO  com.revature.app.MainDriver - POST request received to the /login endpoint
+10 Dec 2021 - 09:56:02.142 [qtp517254671-29] INFO  com.revature.services.UsersService - invoked getUserByUsernameAndPassword() method
+10 Dec 2021 - 09:56:05.723 [qtp517254671-18] INFO  com.revature.app.MainDriver - POST request received to the /newReimbursement endpoint
+10 Dec 2021 - 09:56:05.947 [qtp517254671-18] INFO  com.revature.services.UsersService - invoked newReimbursement() method
+10 Dec 2021 - 09:56:05.947 [qtp517254671-18] WARN  com.revature.services.UsersService - InvalidParameterException was thrown: Reimbursement Type cannot be empty!
