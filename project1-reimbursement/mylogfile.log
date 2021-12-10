@@ -34,3 +34,43 @@
 10 Dec 2021 - 09:56:05.723 [qtp517254671-18] INFO  com.revature.app.MainDriver - POST request received to the /newReimbursement endpoint
 10 Dec 2021 - 09:56:05.947 [qtp517254671-18] INFO  com.revature.services.UsersService - invoked newReimbursement() method
 10 Dec 2021 - 09:56:05.947 [qtp517254671-18] WARN  com.revature.services.UsersService - InvalidParameterException was thrown: Reimbursement Type cannot be empty!
+10 Dec 2021 - 12:33:28.014 [main] INFO  io.javalin.Javalin - 
+       __                      __ _            __ __
+      / /____ _ _   __ ____ _ / /(_)____      / // /
+ __  / // __ `/| | / // __ `// // // __ \    / // /_
+/ /_/ // /_/ / | |/ // /_/ // // // / / /   /__  __/
+\____/ \__,_/  |___/ \__,_//_//_//_/ /_/      /_/
+
+          https://javalin.io/documentation
+
+10 Dec 2021 - 12:33:28.034 [main] INFO  org.eclipse.jetty.util.log - Logging initialized @520ms to org.eclipse.jetty.util.log.Slf4jLog
+10 Dec 2021 - 12:33:28.035 [main] INFO  io.javalin.Javalin - Starting Javalin ...
+10 Dec 2021 - 12:33:28.057 [main] INFO  io.javalin.Javalin - You are running Javalin 4.0.1 (released September 25, 2021. Your Javalin version is 76 days old. Consider upgrading!).
+10 Dec 2021 - 12:33:28.314 [main] INFO  io.javalin.Javalin - Listening on http://localhost:8080/
+10 Dec 2021 - 12:33:28.314 [main] INFO  io.javalin.Javalin - Javalin started in 280ms \o/
+10 Dec 2021 - 12:33:35.247 [qtp517254671-28] INFO  com.revature.app.MainDriver - GET request received to the /loginStatus endpoint
+10 Dec 2021 - 12:33:35.413 [qtp517254671-28] INFO  com.revature.app.MainDriver - GET request received to the /reimbursements endpoint
+10 Dec 2021 - 12:33:35.812 [qtp517254671-20] INFO  com.revature.app.MainDriver - GET request received to the /loginStatus endpoint
+10 Dec 2021 - 12:33:42.159 [qtp517254671-23] INFO  com.revature.app.MainDriver - POST request received to the /login endpoint
+10 Dec 2021 - 12:33:42.178 [qtp517254671-23] INFO  com.revature.services.UsersService - invoked getUserByUsernameAndPassword() method
+10 Dec 2021 - 12:33:42.318 [qtp517254671-28] INFO  com.revature.app.MainDriver - GET request received to the /loginStatus endpoint
+10 Dec 2021 - 12:33:42.323 [qtp517254671-23] INFO  com.revature.app.MainDriver - GET request received to the /reimbursements endpoint
+10 Dec 2021 - 12:33:42.324 [qtp517254671-23] INFO  com.revature.services.UsersService - invoked getAllReimbursement() method
+10 Dec 2021 - 12:33:46.293 [qtp517254671-28] INFO  com.revature.app.MainDriver - GET request received to the /reimbursement/1 endpoint
+10 Dec 2021 - 12:33:46.293 [qtp517254671-28] INFO  com.revature.services.UsersService - invoked newReimbursement() method
+10 Dec 2021 - 12:33:47.637 [qtp517254671-23] INFO  com.revature.app.MainDriver - GET request received to the /reimbursements/1/customerReceipt endpoint
+10 Dec 2021 - 12:33:47.638 [qtp517254671-23] INFO  com.revature.services.UsersService - invoked getCustomerReceiptFromReimbursementById() method
+10 Dec 2021 - 12:33:55.949 [qtp517254671-28] INFO  com.revature.app.MainDriver - GET request received to the /loginStatus endpoint
+10 Dec 2021 - 12:33:55.953 [qtp517254671-23] INFO  com.revature.app.MainDriver - GET request received to the /reimbursements endpoint
+10 Dec 2021 - 12:33:55.953 [qtp517254671-23] INFO  com.revature.services.UsersService - invoked getAllReimbursement() method
+10 Dec 2021 - 12:33:56.569 [qtp517254671-28] INFO  com.revature.app.MainDriver - GET request received to the /reimbursements/1/customerReceipt endpoint
+10 Dec 2021 - 12:33:56.570 [qtp517254671-28] INFO  com.revature.services.UsersService - invoked getCustomerReceiptFromReimbursementById() method
+10 Dec 2021 - 12:33:59.767 [qtp517254671-23] INFO  com.revature.app.MainDriver - GET request received to the /reimbursements/2/customerReceipt endpoint
+10 Dec 2021 - 12:33:59.767 [qtp517254671-23] INFO  com.revature.services.UsersService - invoked getCustomerReceiptFromReimbursementById() method
+10 Dec 2021 - 12:34:02.753 [qtp517254671-28] INFO  com.revature.app.MainDriver - GET request received to the /reimbursements/3/customerReceipt endpoint
+10 Dec 2021 - 12:34:02.753 [qtp517254671-28] INFO  com.revature.services.UsersService - invoked getCustomerReceiptFromReimbursementById() method
+10 Dec 2021 - 12:34:04.713 [qtp517254671-23] INFO  com.revature.app.MainDriver - GET request received to the /reimbursements/4/customerReceipt endpoint
+10 Dec 2021 - 12:34:04.714 [qtp517254671-23] INFO  com.revature.services.UsersService - invoked getCustomerReceiptFromReimbursementById() method
+10 Dec 2021 - 12:34:06.714 [qtp517254671-28] INFO  com.revature.app.MainDriver - GET request received to the /reimbursements/5/customerReceipt endpoint
+10 Dec 2021 - 12:34:06.714 [qtp517254671-28] INFO  com.revature.services.UsersService - invoked getCustomerReceiptFromReimbursementById() method
+10 Dec 2021 - 12:39:18.249 [qtp517254671-32] INFO  com.revature.app.MainDriver - POST request received to the /logout endpoint

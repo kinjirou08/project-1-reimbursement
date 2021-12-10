@@ -8,11 +8,11 @@ window.addEventListener('load', async () => {
     });
     if (res.status === 200) {
         userObj = await res.json();
-            if (userObj.ersRole === 'Finance Manager') {
-                window.location.href = 'finance-manager-home.html';
-            }
-        } else if (res.status === 401) {
-            window.location.href = 'index.html';
+        if (userObj.ersRole === 'Finance Manager') {
+            window.location.href = 'finance-manager-home.html';
+        }
+    } else if (res.status === 401) {
+        window.location.href = 'index.html';
     }
     localStorage.setItem('userObj', JSON.stringify(userObj));
     populateTableWithReimbursements();
@@ -48,7 +48,7 @@ async function populateTableWithReimbursements() {
 
     let tbodyElement = document.querySelector("#reimbursement-table tbody");
     tbodyElement.innerHTML = '';
-    let reimbursementArray =  await res.json();
+    let reimbursementArray = await res.json();
 
     for (let i = 0; i < reimbursementArray.length; i++) {
         let reimbursement = reimbursementArray[i];
@@ -59,7 +59,7 @@ async function populateTableWithReimbursements() {
         tdReimbId.innerHTML = reimbursement.reimbId;
 
         let tdReimbAmount = document.createElement('td');
-        tdReimbAmount.innerHTML = '$'+ reimbursement.reimbAmount;
+        tdReimbAmount.innerHTML = '$' + reimbursement.reimbAmount;
 
         let tdReimbSubmitted = document.createElement('td');
         tdReimbSubmitted.innerHTML = reimbursement.reimbSubmitted;
@@ -67,8 +67,8 @@ async function populateTableWithReimbursements() {
         let tdReimbResolved = document.createElement('td');
         let tdReimbResolver = document.createElement('td');
         if (reimbursement.reimbResolved != null) {
-        tdReimbResolved.innerHTML = reimbursement.reimbResolved;
-        tdReimbResolver.innerHTML = reimbursement.reimbResolver;
+            tdReimbResolved.innerHTML = reimbursement.reimbResolved;
+            tdReimbResolver.innerHTML = reimbursement.reimbResolver;
         } else {
             tdReimbResolved.innerHTML = 'Not Yet Resolved'
             tdReimbResolver.innerHTML = "No Resolver Yet"
@@ -136,7 +136,7 @@ let reimbModal = document.querySelector('#new-reimbursement-modal');
 
 function newReimbursement() {
 
-  reimbModal.classList.add('is-active');
+    reimbModal.classList.add('is-active');
 
 }
 
@@ -158,7 +158,7 @@ let submitReimbursementButton = document.querySelector('#sumbit-reimbursement');
 
 submitReimbursementButton.addEventListener('click', addReimbursement);
 
-async function addReimbursement () {
+async function addReimbursement() {
 
     let reimbTypeInput = document.querySelector('#reimb-type');
     let value = reimbTypeInput.options[reimbTypeInput.selectedIndex].textContent;
@@ -217,11 +217,11 @@ async function addReimbursement () {
 }
 
 const fileInput = document.querySelector('#reim-receipt input[type=file]');
-  fileInput.onchange = () => {
+fileInput.onchange = () => {
     if (fileInput.files.length > 0) {
-      const fileName = document.querySelector('#reim-receipt .file-name');
-      fileName.textContent = fileInput.files[0].name;
+        const fileName = document.querySelector('#reim-receipt .file-name');
+        fileName.textContent = fileInput.files[0].name;
     }
-  }
+}
 
 

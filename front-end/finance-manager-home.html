@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reimbursement System</title>
-    <link rel="stylesheet" href="https://bulma.io/vendor/fontawesome-free-5.15.2-web/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <link rel="stylesheet" href="index.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reimbursement System</title>
+  <link rel="stylesheet" href="https://bulma.io/vendor/fontawesome-free-5.15.2-web/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="finance-manager.css">
 </head>
+
 <body>
-  <div class="modal" id = "view-receipt-modal">
+  <div class="modal" id="view-receipt-modal">
     <div class="modal-background"></div>
     <div class="modal-content is-centered">
       <p class="image is-4by3">
@@ -20,57 +23,57 @@
     <button class="modal-close is-large" aria-label="close"></button>
   </div>
 
-  <div class="modal" id = "new-reimbursement-modal">
+  <div class="modal" id="new-reimbursement-modal">
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">File a Reimbursement Request</p>
-        <button class="delete" id = "cancel-reimbursement" aria-label="close"></button>
+        <button class="delete" id="cancel-reimbursement" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
 
         <div class="field is-horizontal">
           <div class="field-body">
-              <div class="field is-narrow">
-                  <div class="control">
-                      <label class="label" >Reimbursement Type</label>
-                          <div class="select is-fullwidth is-info" >
-                              <select id = "reimb-type" style = "background-color: #e3e3e3ab;">
-                              <option>Food</option>
-                              <option>Lodging</option>
-                              <option>Travel</option>
-                              <option>Other</option>
-                              </select>
-                          </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-
-      <div class="field is-horizontal">
-        <div class = "field-body">
-            <div class="field">
-                <label class="label" >Reason of Reimbursement</label>
-                <textarea id = "reimb-description" class="textarea is-primary is-info"
-                placeholder="Description" style = "background-color: #e3e3e3ab;"></textarea>
-            </div>
-        </div>
-      </div>
-
-      <div class="field is-horizontal">
-        <div class = "field-body">
             <div class="field is-narrow">
-                <label class="label" >Reimbursement Amount</label>
-                        <input id = "reimb-amount" type="text" placeholder="$"  style = "background-color: #e3e3e3ab;"
-                        class="input is-info" required>
+              <div class="control">
+                <label class="label">Reimbursement Type</label>
+                <div class="select is-fullwidth is-info">
+                  <select id="reimb-type" style="background-color: #e3e3e3ab;">
+                    <option>Food</option>
+                    <option>Lodging</option>
+                    <option>Travel</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
-      </div>
 
-      <div class="field is-horizontal">
-        <div class = "field-body">
+        <div class="field is-horizontal">
+          <div class="field-body">
             <div class="field">
-              <div class="file is-info has-name is-fullwidth" id = "reim-receipt">
+              <label class="label">Reason of Reimbursement</label>
+              <textarea id="reimb-description" class="textarea is-primary is-info" placeholder="Description"
+                style="background-color: #e3e3e3ab;"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-body">
+            <div class="field is-narrow">
+              <label class="label">Reimbursement Amount</label>
+              <input id="reimb-amount" type="text" placeholder="$" style="background-color: #e3e3e3ab;"
+                class="input is-info" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-body">
+            <div class="field">
+              <div class="file is-info has-name is-fullwidth" id="reim-receipt">
                 <label class="file-label">
                   <input class="file-input" type="file" name="resume">
                   <span class="file-cta">
@@ -81,8 +84,8 @@
                       Upload Receipt
                     </span>
                   </span>
-                  <span class="file-name" style = "background-color: #e3e3e3ab;">
-                      Receipt must be of JPEG/JPG, PNG, or GIF
+                  <span class="file-name" style="background-color: #e3e3e3ab;">
+                    Receipt must be of JPEG/JPG, PNG, or GIF
                   </span>
                 </label>
               </div>
@@ -91,35 +94,35 @@
         </div>
       </section>
       <footer class="modal-card-foot">
-        <button class="button is-success" id = "sumbit-reimbursement">Submit</button>
-        <button class="button" id = "cancel-reimbursement-v2">Cancel</button>
+        <button class="button is-success" id="sumbit-reimbursement">Submit</button>
+        <button class="button" id="cancel-reimbursement-v2">Cancel</button>
       </footer>
     </div>
   </div>
 
-  <div class="modal" id = "apporve-reject-modal">
+  <div class="modal" id="apporve-reject-modal">
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">Approve or Reject a Reimbursement Request</p>
-        <button class="delete" id = "cancel-reimbursementv3" aria-label="close"></button>
+        <button class="delete" id="cancel-reimbursementv3" aria-label="close"></button>
       </header>
 
       <section class="modal-card-body">
 
         <div class="field is-horizontal">
-          <div class = "field-body">
-              <div class="field is-narrow">
-                  <label class="label" >Reimbursement ID</label>
-                          <input id = "reimb-id" type="text" style = "background-color: #e3e3e3ab;" class="input is-info" required>
-              </div>
-              <button class = "button is-success" id = "search" style = "top: 31px">Search</button>
+          <div class="field-body">
+            <div class="field is-narrow">
+              <label class="label">Reimbursement ID</label>
+              <input id="reimb-id" type="text" style="background-color: #e3e3e3ab;" class="input is-info" required>
+            </div>
+            <button class="button is-success" id="search" style="top: 31px">Search</button>
           </div>
         </div>
 
-        <table id="searched-reimb" class = "table is-bordered is-narrow" style = "background-color: #98ddd3;">
+        <table id="searched-reimb" class="table is-bordered is-narrow" style="background-color: #98ddd3;">
           <thead>
-            <tr style = "text-align: center;">
+            <tr style="text-align: center;">
               <th>Reimbursement Id</th>
               <th>Reimbursement Amount</th>
               <th>Time of Reimbursement Request</th>
@@ -138,92 +141,92 @@
 
         <div class="field is-horizontal">
           <div class="field-body">
-              <div class="field is-narrow">
-                  <div class="control">
-                      <label class="label">Approve or Reject</label>
-                          <div class="select is-fullwidth is-info" >
-                              <select id = "approved-rejected" style = "background-color: #e3e3e3ab;">
-                              <option>Approved</option>
-                              <option>Rejected</option>
-                              </select>
-                          </div>
-                  </div>
+            <div class="field is-narrow">
+              <div class="control">
+                <label class="label">Approve or Reject</label>
+                <div class="select is-fullwidth is-info">
+                  <select id="approved-rejected" style="background-color: #e3e3e3ab;">
+                    <option>Approved</option>
+                    <option>Rejected</option>
+                  </select>
+                </div>
               </div>
+            </div>
           </div>
-      </div>
+        </div>
 
 
       </section>
       <footer class="modal-card-foot">
-        <button class="button is-success" id = "approve-reject-reimbursement">Submit</button>
-        <button class="button" id = "cancel-reimbursementv4">Cancel</button>
-        <div id = "fm-message">
+        <button class="button is-success" id="approve-reject-reimbursement">Submit</button>
+        <button class="button" id="cancel-reimbursementv4">Cancel</button>
+        <div id="fm-message">
       </footer>
     </div>
   </div>
 
 
 
-  <nav class="navbar" style = "background-color: #1c1c1c;" role="navigation" aria-label="main navigation">
+  <nav class="navbar" style="background-color: #1c1c1c;" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link" style= " font-size: 1.08rem;">
+        <a class="navbar-link" style=" font-size: 1.08rem;">
           <p>Welcome Manager!</p>
-      </a>
+        </a>
 
-        <div class="navbar-dropdown" id = "select-options">
-          <a class="navbar-item " id = "add-reimbursement" >
+        <div class="navbar-dropdown" id="select-options">
+          <a class="navbar-item " id="add-reimbursement">
             Add a Reimbursement
           </a>
-          <div class="navbar-item has-background-grey-light" style ="color: #000000;">
+          <div class="navbar-item has-background-grey-light" style="color: #000000;">
             Filter Reimbursement Requests By:
           </div>
-          <hr class = "navbar-divider">
-          <a class="navbar-item" id = "filter-all" style="color: #000000; background-color: #51ffe5;">
+          <hr class="navbar-divider">
+          <a class="navbar-item" id="filter-all" style="color: #000000; background-color: #51ffe5;">
             All Requests
           </a>
-          <a class="navbar-item has-background-warning" id = "filter-pending" style="color: #000000;">
+          <a class="navbar-item has-background-warning" id="filter-pending" style="color: #000000;">
             Pending Requests
           </a>
-          <a class="navbar-item has-background-success" id = "filter-approved" style="color: #000000;">
+          <a class="navbar-item has-background-success" id="filter-approved" style="color: #000000;">
             Approved Requests
           </a>
-          <a class="navbar-item has-background-danger" id = "filter-rejected" style="color: #000000;">
+          <a class="navbar-item has-background-danger" id="filter-rejected" style="color: #000000;">
             Rejected Requests
           </a>
-          <hr class = "navbar-divider">
-          <a class="navbar-item" id = "approve-reject" style="color: #000000; background-color: #a051ff9e;">
+          <hr class="navbar-divider">
+          <a class="navbar-item" id="approve-reject" style="color: #000000; background-color: #a051ff9e;">
             Approve Or Reject Requests
           </a>
         </div>
       </div>
     </div>
 
-      <div id="navMenu" class="navbar-menu">
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <button id = "logoutBtn" class="button is-dark"> Log Out </button>
-            </div>
+    <div id="navMenu" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <button id="logoutBtn" class="button is-dark"> Log Out </button>
           </div>
         </div>
       </div>
+    </div>
 
   </nav>
 
   <section class="hero is-link is-fullheight-with-navbar">
-    <div class = "columns is-centered">
-      <div class = "column">
+    <div class="columns is-centered">
+      <div class="column">
         <div class="notification is-primary" style="padding-right: 24px;">
 
-          <div class = "box label" style = "text-align: center; background-color: #e3e3e3ab;">
-          Reimbursement History
+          <div class="box label" style="text-align: center; background-color: #e3e3e3ab;">
+            Reimbursement History
           </div>
 
           <div id="reimbursements">
-            <table id="reimbursement-table" class = "table is-bordered is-narrow" style = "background-color: #98ddd3;">
+            <table id="reimbursement-table" class="table is-bordered is-narrow" style="background-color: #98ddd3;">
               <thead>
-                <tr style = "text-align: center; ">
+                <tr style="text-align: center; ">
                   <th>Reimbursement Id</th>
                   <th>Reimbursement Amount</th>
                   <th>Time of Reimbursement Request</th>
@@ -245,6 +248,7 @@
     </div>
 
   </section>
-<script src = "finance-manager.js"></script>
+  <script src="finance-manager.js"></script>
 </body>
+
 </html>
