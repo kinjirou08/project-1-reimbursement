@@ -20,7 +20,9 @@
 - Logback version 1.2.6
 - Tika version 1.18 (For getting file type)
 - SonarCloud.io
-    JaCoCo version 0.8.7 (For Code Coverage)
+    - JaCoCo version 0.8.7 (For Code Coverage)
+- Bulma version 0.9.3
+
 
 ### For Testing
 - JUnit 5 (Jupiter) API version 5.8.1
@@ -41,3 +43,14 @@
     - Successfully logging in
     - Successfully logging out
     - Approving or Denying a Request is functional
+    - Filtering a Reimbursement Request by Status
+        - Pending Filter implemented
+        - Approved Filter implemented
+        - Rejected Filter implemented
+        - All Request Status implemented
+
+3. Added feature outside of MVP (Minimum Viable Product)
+    - Adding a Reimbursement in Finance Manager homepage
+    - Creation of new Account/User (Sign up page)
+
+
